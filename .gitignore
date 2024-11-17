@@ -1,0 +1,6 @@
+
+app/yt-dlp.exe
+app/ffmpeg.exe
+app/ffplay.exe
+app/ffprobe.exe
+*.mp4

@@ -1,0 +1,50 @@
+//placing this at top as this will probs be what i need to do to get past yt-dlps sorting not working
+If you want to download multiple videos, and they don't have the same formats available, you can specify the order of preference using slashes. Note that formats on the left hand side are preferred; e.g. -f 22/17/18 will download format 22 if it's available, otherwise it will download format 17 if it's available, otherwise it will download format 18 if it's available, otherwise it will complain that no suitable formats are available for download.
+
+If you want to download several formats of the same video use a comma as a separator, e.g. -f 22,17,18 will download all these three formats, of course if they are available. Or a more sophisticated example combined with the precedence feature: -f 136/137/mp4/bestvideo,140/m4a/bestaudio.
+
+./yt-dlp -f 299/137/216/298/136/135/134/133/160+ba* --remux-video mp4 -o "%(title)s.%(ext)s" https://www.youtube.com/watch?v=Qo9OV9iqebc
+
+
+--remux-video mp4
+
+
+
+warning, passing no other arguments can get 4K Av1
+
+./yt-dlp --list-formats https://www.youtube.com/watch?v=Qo9OV9iqebc
+
+--remux-video mp4
+//didnt work
+
+
+//My other adventures on just trying to get the best avc1/H264 video but it fails and always fails back to av1 or just says the format is not available even though it is.
+
+
+./yt-dlp -f "bv*[height=1080][vcodec=h264]+ba/bv*[height<=1080][vcodec=h264]+ba/best" --recode-video mp4 -o "%(title)s.%(ext)s" https://www.youtube.com/watch?v=Qo9OV9iqebc
+
+
+//being more strict and forcing 1080P and forces H264
+./yt-dlp -f "bv*[height=1080][vcodec=h264]+ba/bv*[height<=1080]+ba" --recode-video mp4 --postprocessor-args "-preset veryfast" -o "%(title)s.%(ext)s" https://www.youtube.com/watch?v=Qo9OV9iqebc
+
+
+
+//Just 1080P what ever is best, seems to fallback to 720P if 1080P is not available, will download AV1
+./yt-dlp -f "bv*[height<=1080][ext=mp4]+ba[ext=m4a]/best[ext=mp4]" -o "%(title)s.%(ext)s" https://www.youtube.com/watch?v=Qo9OV9iqebc
+
+
+// 1080P will preferring AVC1 
+
+./yt-dlp -f "bv*[height=1080][vcodec=AVC1]+ba[ext=m4a]/bv*[height<=1080][vcodec=AVC1]+ba[ext=m4a]" -o "%(title)s.%(ext)s" https://www.youtube.com/watch?v=Qo9OV9iqebc
+
+
+
+//troubleshooting
+./yt-dlp -f 299+249 -o "%(title)s.%(ext)s" https://www.youtube.com/watch?v=Qo9OV9iqebc
+
+
+//just get the best stream in format
+./yt-dlp -f bv*[vcodec=h264]+ba[ext=m4a] -vU -o "%(title)s.%(ext)s" https://www.youtube.com/watch?v=Qo9OV9iqebc
+
+
+   
