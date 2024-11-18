@@ -14,8 +14,8 @@ import (
 func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 	Domain := r.Host
 	QualitySelector := QualityFinder(r.URL.Path)
-	fmt.Printf("Hello, you selected %s", QualitySelector)
-	VideoURL, VideoID, err := urlhelper(r.URL.Path, "1080Ph264forced/")
+	//fmt.Printf("Hello, you selected %s", QualitySelector)
+	VideoURL, VideoID, err := urlhelper(r.URL.Path, QualitySelector)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return

@@ -53,8 +53,9 @@ func disablelisting(next http.Handler) http.Handler {
 	})
 }
 
-func urlhelper(path, prefix string) (string, string, error) {
-	pathParts := strings.Split(path, prefix)
+func urlhelper(path, QualitySelector string) (string, string, error) {
+	QualityName := fmt.Sprintf("%s/", QualitySelector)
+	pathParts := strings.Split(path, QualityName)
 	if len(pathParts[1]) < 3 {
 		return "", "", errors.New("missing or invalid video URL")
 	}
