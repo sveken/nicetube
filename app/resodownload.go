@@ -14,7 +14,10 @@ import (
 func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 	Domain := r.Host
 	QualitySelector := QualityFinder(r.URL.Path)
+	QualityValue := SetQuality(QualitySelector)
 	//fmt.Printf("Hello, you selected %s", QualitySelector)
+	//fmt.Printf("Hello, you selected %s", QualityValue)
+	forceformat := doWeNeedDashf(QualityValue)
 	VideoURL, VideoID, err := urlhelper(r.URL.Path, QualitySelector)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -29,7 +32,7 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 	outputname := fmt.Sprintf("./Videos/%s/%%(title)s.%%(ext)s", VideoID)
 	process := exec.Command(
 		"./yt-dlp",
-		"-f", "299+ba/137+ba/216+ba/298+ba/136+ba/135+ba/134+ba/133+ba/160+ba",
+		forceformat, QualityValue,
 		"--remux-video", "mp4",
 		"-o", outputname,
 		VideoURL,
