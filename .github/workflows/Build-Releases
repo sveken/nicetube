@@ -1,0 +1,37 @@
+name: Build-Releases
+on:
+  release:
+    types:
+      - created
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.23.3'
+    - name: Display the Release tag
+    run: echo ${{ github.event.release.tag_name }}
+
+    - name: Build for all platforms
+    run: |
+        mkdir -p dist
+        platforms=("windows/amd64" "linux/amd64" "darwin/amd64" "darwin/arm64" "linux/arm64" "windows/arm64")
+        for platform in "${platforms[@]}"; do
+          os=$(echo $platform | cut -d'/' -f1)
+          arch=$(echo $platform | cut -d'/' -f2)
+          output="dist/nicetube-$os-$arch"
+          [ "$os" == "windows" ] && output+=".exe"
+          GOOS=$os GOARCH=$arch go build -o $output ./app
+        done
+    - name: Upload release assets
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: dist/
+        asset_name: app-${{ matrix.platform }}-${{ matrix.arch }}
+        content_type: application/octet-stream
