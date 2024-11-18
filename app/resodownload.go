@@ -41,5 +41,7 @@ func reso1080Ph264forced(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("Command failed with exit code %d\n", process.ProcessState.ExitCode())
 		fmt.Println(err)
 	}
-	ReturnDownloadURL(savedir, Domain)
+	TheDownloadURL := ReturnDownloadURL(savedir, Domain)
+	fmt.Println(TheDownloadURL)
+	http.Redirect(w, r, TheDownloadURL, http.StatusSeeOther)
 }
