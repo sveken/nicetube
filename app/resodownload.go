@@ -12,12 +12,14 @@ import (
 //1080P60/1080P30/720P60/720P30/480p/360p/240p/144p
 
 func reso1080Ph264forced(w http.ResponseWriter, r *http.Request) {
+	Domain := r.Host
 	VideoURL, VideoID, err := urlhelper(r.URL.Path, "reso1080Ph264forced/")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	err = foldergen(VideoID)
+	var savedir string
+	savedir, err = foldergen(VideoID, savedir)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -39,4 +41,5 @@ func reso1080Ph264forced(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("Command failed with exit code %d\n", process.ProcessState.ExitCode())
 		fmt.Println(err)
 	}
+	ReturnDownloadURL(savedir, Domain)
 }

@@ -70,11 +70,42 @@ func urlhelper(path, prefix string) (string, string, error) {
 
 // Makes the folder the video lives under using the last bit of the string from the video.
 // This way the video could have the the same name as another video but its still treated as different
-func foldergen(VideoID string) error {
-	err := os.MkdirAll(fmt.Sprintf("./Videos/%s", VideoID), 0755) // Permissions: rwxr-xr-x
+func foldergen(VideoID string, savedir string) (string, error) {
+	savedir = fmt.Sprintf("./Videos/%s", VideoID)
+	err := os.MkdirAll(savedir, 0755) // Permissions: rwxr-xr-x
 	if err != nil {
 		fmt.Println("Error creating directory:", err)
-		return err
+		return savedir, err
 	}
-	return err
+	return savedir, err
+}
+
+func ReturnDownloadURL(savedir string, Domain string) {
+	fmt.Printf("Save directory is %s and the URL from Path is %s", savedir, Domain)
+	mp4File, _ := GetFileName(savedir)
+	fmt.Printf("And the Mp4 name is %s", mp4File)
+
+}
+
+func GetFileName(savedir string) (string, error) {
+	files, err := os.ReadDir(savedir)
+	if err != nil {
+		return "", fmt.Errorf("failed to read directory: %v", err)
+	}
+
+	// Find the .mp4 file in the directory and extract its name
+	var mp4File string
+	for _, file := range files {
+		if !file.IsDir() && strings.HasSuffix(file.Name(), ".mp4") {
+			mp4File = file.Name()
+			break
+		}
+	}
+
+	// If no .mp4 file is found
+	if mp4File == "" {
+		return "", fmt.Errorf("no .mp4 file found in the directory")
+	}
+
+	return mp4File, nil
 }
