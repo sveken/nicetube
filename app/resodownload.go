@@ -11,9 +11,11 @@ import (
 //will Start and fallback in the following order
 //1080P60/1080P30/720P60/720P30/480p/360p/240p/144p
 
-func reso1080Ph264forced(w http.ResponseWriter, r *http.Request) {
+func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 	Domain := r.Host
-	VideoURL, VideoID, err := urlhelper(r.URL.Path, "reso1080Ph264forced/")
+	QualitySelector := QualityFinder(r.URL.Path)
+	fmt.Printf("Hello, you selected %s", QualitySelector)
+	VideoURL, VideoID, err := urlhelper(r.URL.Path, "1080Ph264forced/")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return

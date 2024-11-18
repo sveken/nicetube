@@ -27,7 +27,7 @@ func main() {
 	//URL Time
 	mux.HandleFunc("GET /{$}", homepage)
 	mux.Handle("GET /Videos/", http.StripPrefix("/Videos", disablelisting(fileserver)))
-	mux.HandleFunc("/reso1080Ph264forced/", reso1080Ph264forced)
+	mux.HandleFunc("/reso/1080Ph264forced/", GetResoVideos)
 
 	// Logging stuffs
 	logger = slog.New(slog.NewTextHandler(os.Stdout, nil))
