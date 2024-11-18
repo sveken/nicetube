@@ -14,9 +14,12 @@ func urlhelper(path, prefix string) (string, error) {
 	if len(pathParts[1]) < 3 {
 		return "", errors.New("missing or invalid video URL")
 	}
-	// fixing the https:/ thingy with https://
+	// fixing the https:/ thingy with https:// and getting the final video URL
 	VideoURL := strings.Replace(pathParts[1], "https:/", "https://", 1)
-	logger.Info("Getting Youtube video", "URL", VideoURL)
+	//Generate a unique ID to track the video based off string at the end of the video URL
+	lastSlashPosition := strings.LastIndex(pathParts[1], "/")
+	VideoID := pathParts[1][lastSlashPosition+1:]
+	logger.Info("Getting Youtube video", "URL", VideoURL, "VideoID", VideoID)
 	return VideoURL, nil
 
 }
