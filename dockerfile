@@ -14,9 +14,9 @@ ENV	DEBIAN_FRONTEND=noninteractive
 STOPSIGNAL SIGINT
 WORKDIR /home/Nicetube
 
-ADD https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux /home/Nicetube
-ADD https://github.com/yt-dlp/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz /home/Nicetube
-ADD https://github.com/sveken/nicetube/releases/latest/download/nicetube-linux-amd64 /home/Nicetube/
+ADD https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux ./yt-dlp_linux
+ADD https://github.com/yt-dlp/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz ./
+ADD https://github.com/sveken/nicetube/releases/latest/download/nicetube-linux-amd64 ./nicetube-linux-amd64
 
 RUN mkdir /home/Nicetube/Videos \
 && chown -R container:container /home/Nicetube/Videos
