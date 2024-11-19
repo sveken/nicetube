@@ -37,8 +37,8 @@ ENV	DEBIAN_FRONTEND=noninteractive
 COPY --from=stage1 /home/Nicetube /home/Nicetube 
 WORKDIR /home/Nicetube
 RUN mkdir /home/Nicetube/Videos \
-&& chown -R container:container /home/Nicetube \
-&& useradd -m -d /home/Nicetube -s /bin/bash/ container
+&& useradd -m -d /home/Nicetube -s /bin/bash/ container \
+&& chown -R container:container /home/Nicetube
 
 STOPSIGNAL SIGINT
 USER container
