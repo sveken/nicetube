@@ -7,7 +7,6 @@ LABEL org.opencontainers.image.description="Official Docker image for Nicetube b
 LABEL org.opencontainers.image.licenses=GPL-3.0-or-later
 
 RUN useradd -m -d /home/Nicetube -s /bin/bash/ container
-USER container
 ENV USER=container
 ENV HOME=/home/Nicetube
 ENV	DEBIAN_FRONTEND=noninteractive
@@ -23,5 +22,5 @@ RUN mkdir /home/Nicetube/Videos \
 
 RUN chmod +x /home/Nicetube/yt-dlp_linux \
 && chmod +x /home/Nicetube/nicetube-linux-amd64
-
+USER container
 CMD ["./nicetube-linux-amd64"]
