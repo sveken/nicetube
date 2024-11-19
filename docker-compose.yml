@@ -1,6 +1,6 @@
 services:
   Nicetube:
-    image: testnicetube:latest
+    image: ghcr.io/sveken/nicetube:main
     ports:
       - "8085:8085"
     #volumes:
