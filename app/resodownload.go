@@ -48,6 +48,7 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 	}
 	TheDownloadURL := ReturnDownloadURL(savedir, Domain)
-	fmt.Println(TheDownloadURL)
-	http.Redirect(w, r, TheDownloadURL, http.StatusSeeOther)
+	//fmt.Println(TheDownloadURL)
+	//http.Redirect(w, r, TheDownloadURL, http.StatusSeeOther)
+	fmt.Fprintf(w, TheDownloadURL)
 }
