@@ -6,6 +6,7 @@ LABEL org.opencontainers.image.source=https://github.com/sveken/nicetube
 LABEL org.opencontainers.image.description="Official Docker image for Nicetube bundled with required dependencies"
 LABEL org.opencontainers.image.licenses=GPL-3.0-or-later
 
+RUN useradd -m -d /home/Nicetube -s /bin/bash/ container
 USER container
 ENV USER=container
 ENV HOME=/home/Nicetube
