@@ -1,4 +1,4 @@
-FROM debian:bookworm-slim as stage1
+FROM debian:bookworm-slim AS stage1
 
 
 
@@ -8,12 +8,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     xz-utils \
     && rm -rf /var/lib/apt/lists/*
 
-
-
-RUN useradd -m -d /home/Nicetube -s /bin/bash/ container
-ENV USER=container
-ENV HOME=/home/Nicetube
-ENV	DEBIAN_FRONTEND=noninteractive
 WORKDIR /home/Nicetube
 
 ADD https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux ./yt-dlp
@@ -37,14 +31,14 @@ LABEL org.opencontainers.image.title="Nicetube"
 LABEL org.opencontainers.image.source=https://github.com/sveken/nicetube
 LABEL org.opencontainers.image.description="Official Docker image for Nicetube bundled with required dependencies"
 LABEL org.opencontainers.image.licenses=GPL-3.0-or-later
-RUN useradd -m -d /home/Nicetube -s /bin/bash/ container
 ENV USER=container
 ENV HOME=/home/Nicetube
 ENV	DEBIAN_FRONTEND=noninteractive
 COPY --from=stage1 /home/Nicetube /home/Nicetube 
 WORKDIR /home/Nicetube
 RUN mkdir /home/Nicetube/Videos \
-&& chown -R container:container /home/Nicetube 
+&& chown -R container:container /home/Nicetube \
+&& useradd -m -d /home/Nicetube -s /bin/bash/ container
 
 STOPSIGNAL SIGINT
 USER container
