@@ -19,7 +19,13 @@ func QualityFinder(path string) string {
 }
 
 var (
+	poggers          = ""
 	Q1080Ph264forced = "299+ba/137+ba/216+ba/298+ba/136+ba/135+ba/134+ba/133+ba/160+ba"
+	Q720Ph264forced  = "place"
+	Q480Ph264forced  = "hello"
+	Q1080P           = "place"
+	Q720P            = "place"
+	Q480P            = "place"
 )
 
 func SetQuality(QualitySelector string) string {
