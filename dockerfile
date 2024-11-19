@@ -4,6 +4,13 @@ LABEL org.opencontainers.image.authors="Sveken"
 LABEL org.opencontainers.image.title="Nicetube"
 LABEL org.opencontainers.image.source=https://github.com/sveken/nicetube
 LABEL org.opencontainers.image.description="Official Docker image for Nicetube bundled with required dependencies"
+
+#Uhh i need to install stuff just to extract ffmpeg...
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    xz-utils \
+    && rm -rf /var/lib/apt/lists/*
+
 LABEL org.opencontainers.image.licenses=GPL-3.0-or-later
 
 RUN useradd -m -d /home/Nicetube -s /bin/bash/ container
