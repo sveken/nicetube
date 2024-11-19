@@ -35,7 +35,7 @@ RUN tar -xf /home/Nicetube/ffmpeg-master-latest-linux64-gpl.tar.xz -C /home/Nice
     && rm -r ./ffmpeg-master-latest-linux64-gpl
 
 RUN mkdir /home/Nicetube/Videos \
-&& chown -R container:container /home/Nicetube/Videos
+&& chown -R container:container /home/Nicetube 
 
 USER container
 CMD ["./nicetube-linux-amd64"]
