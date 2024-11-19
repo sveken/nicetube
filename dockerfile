@@ -21,4 +21,7 @@ ADD https://github.com/sveken/nicetube/releases/latest/download/nicetube-linux-a
 RUN mkdir /home/Nicetube/Videos \
 && chown -R container:container /home/Nicetube/Videos
 
-CMD nicetube-linux-amd64 
+RUN chmod +x /home/Nicetube/yt-dlp_linux \
+    && chmod +x /home/Nicetube/nicetube-linux-amd64
+
+CMD ["./nicetube-linux-amd64"]
