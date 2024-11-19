@@ -1,9 +1,6 @@
-FROM debian:bookworm-slim
+FROM debian:bookworm-slim as stage1
 
-LABEL org.opencontainers.image.authors="Sveken"
-LABEL org.opencontainers.image.title="Nicetube"
-LABEL org.opencontainers.image.source=https://github.com/sveken/nicetube
-LABEL org.opencontainers.image.description="Official Docker image for Nicetube bundled with required dependencies"
+
 
 #Uhh i need to install stuff just to extract ffmpeg...
 
@@ -11,13 +8,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     xz-utils \
     && rm -rf /var/lib/apt/lists/*
 
-LABEL org.opencontainers.image.licenses=GPL-3.0-or-later
+
 
 RUN useradd -m -d /home/Nicetube -s /bin/bash/ container
 ENV USER=container
 ENV HOME=/home/Nicetube
 ENV	DEBIAN_FRONTEND=noninteractive
-STOPSIGNAL SIGINT
 WORKDIR /home/Nicetube
 
 ADD https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux ./yt-dlp
@@ -34,8 +30,22 @@ RUN tar -xf /home/Nicetube/ffmpeg-master-latest-linux64-gpl.tar.xz -C /home/Nice
     && rm -rf /home/Nicetube/ffmpeg-master-latest-linux64-gpl.tar.xz \
     && rm -r ./ffmpeg-master-latest-linux64-gpl
 
+#Stage 2
+FROM debian:bookworm-slim
+LABEL org.opencontainers.image.authors="Sveken"
+LABEL org.opencontainers.image.title="Nicetube"
+LABEL org.opencontainers.image.source=https://github.com/sveken/nicetube
+LABEL org.opencontainers.image.description="Official Docker image for Nicetube bundled with required dependencies"
+LABEL org.opencontainers.image.licenses=GPL-3.0-or-later
+RUN useradd -m -d /home/Nicetube -s /bin/bash/ container
+ENV USER=container
+ENV HOME=/home/Nicetube
+ENV	DEBIAN_FRONTEND=noninteractive
+COPY --from=stage1 /home/Nicetube /home/Nicetube 
+WORKDIR /home/Nicetube
 RUN mkdir /home/Nicetube/Videos \
 && chown -R container:container /home/Nicetube 
 
+STOPSIGNAL SIGINT
 USER container
 CMD ["./nicetube-linux-amd64"]
