@@ -22,6 +22,6 @@ RUN mkdir /home/Nicetube/Videos \
 && chown -R container:container /home/Nicetube/Videos
 
 RUN chmod +x /home/Nicetube/yt-dlp_linux \
-    && chmod +x /home/Nicetube/nicetube-linux-amd64
+&& chmod +x /home/Nicetube/nicetube-linux-amd64
 
 CMD ["./nicetube-linux-amd64"]
