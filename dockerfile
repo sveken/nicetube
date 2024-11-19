@@ -17,7 +17,7 @@ ADD https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux ./yt-
 ADD https://github.com/yt-dlp/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz ./ffmpeg-master-latest-linux64-gpl.tar.xz
 ADD https://github.com/sveken/nicetube/releases/latest/download/nicetube-linux-amd64 ./nicetube-linux-amd64
 
-RUN RUN tar -xf /home/Nicetube/ffmpeg-master-latest-linux64-gpl.tar.xz --strip-components=1 -C /home/Nicetube \
+RUN tar -xf /home/Nicetube/ffmpeg-master-latest-linux64-gpl.tar.xz --strip-components=1 -C /home/Nicetube \
 && chmod +x /home/Nicetube/yt-dlp_linux \
 && chmod +x /home/Nicetube/nicetube-linux-amd64 \
 && rm /home/Nicetube/ffmpeg-master-latest-linux64-gpl.tar.xz
