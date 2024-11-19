@@ -1,0 +1,9 @@
+services:
+  Nicetube:
+    image: testnicetube:latest
+    ports:
+      - "8085:8085"
+    #volumes:
+    #Uncomment if you want to store the video files elsewhere. Otherwise it will store them inside the container, which gets wiped every recreation/update.
+     # - /Mydatapth:/home/Nicetube/Videos 
+    restart: always
