@@ -17,6 +17,7 @@ func main() {
 	fmt.Println("Hello")
 	// Reading any command line flags and adjust the config
 	//When we go to docker the start up bach script should do this passing the envoirmetnal variables to the flag
+	//Not used yet
 	addr := flag.String("addr", ":8085", "HTTP Server address")
 	flag.Parse()
 	fmt.Printf("Running with options %s", *addr)
