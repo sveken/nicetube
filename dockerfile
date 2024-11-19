@@ -25,13 +25,14 @@ ADD https://github.com/yt-dlp/FFmpeg-Builds/releases/download/latest/ffmpeg-mast
 ADD https://github.com/sveken/nicetube/releases/latest/download/nicetube-linux-amd64 ./nicetube-linux-amd64
 
 RUN tar -xf /home/Nicetube/ffmpeg-master-latest-linux64-gpl.tar.xz -C /home/Nicetube \
-    && mv /home/Nicetube/bin/ffprobe /home/Nicetube \
-    && mv /home/Nicetube/bin/ffplay /home/Nicetube \
-    && mv /home/Nicetube/bin/ffmpeg /home/Nicetube \
+    && mv $(find /home/Nicetube -type f -name ffprobe) /home/Nicetube \
+    && mv $(find /home/Nicetube -type f -name ffplay) /home/Nicetube \
+    && mv $(find /home/Nicetube -type f -name ffmpeg) /home/Nicetube \
     && chmod +x /home/Nicetube/yt-dlp_linux \
     && chmod +x /home/Nicetube/nicetube-linux-amd64 \
     && chmod +x /home/Nicetube/ffprobe /home/Nicetube/ffplay /home/Nicetube/ffmpeg \
-    && rm -rf /home/Nicetube/ffmpeg-master-latest-linux64-gpl.tar.xz /home/Nicetube/bin /home/Nicetube/*
+    && rm -rf /home/Nicetube/ffmpeg-master-latest-linux64-gpl.tar.xz \
+    && rm -r ./ffmpeg-master-latest-linux64-gpl
 
 RUN mkdir /home/Nicetube/Videos \
 && chown -R container:container /home/Nicetube/Videos
