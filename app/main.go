@@ -20,7 +20,7 @@ func main() {
 	//Not used yet
 	addr := flag.String("addr", ":8085", "HTTP Server address")
 	flag.Parse()
-	fmt.Printf("Running with options %s", *addr)
+	//fmt.Printf("Running with options %s", *addr)
 	mux := http.NewServeMux()
 	//Change this to /Video for container use...actually Just bind the Video folder under this in docker compose
 	fileserver := http.FileServer(http.Dir("./Videos/"))
@@ -33,6 +33,7 @@ func main() {
 	// Logging stuffs
 	logger = slog.New(slog.NewTextHandler(os.Stdout, nil))
 	logger.Info("Starting the webserver on", "addr", *addr)
+	go cleaner()
 	err := http.ListenAndServe(*addr, mux)
 	logger.Error(err.Error())
 	os.Exit(1)
