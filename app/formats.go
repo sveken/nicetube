@@ -19,21 +19,39 @@ func QualityFinder(path string) string {
 }
 
 var (
-	poggers          = ""
+	QPoggers         = ""
 	Q1080Ph264forced = "299+ba/137+ba/216+ba/298+ba/136+ba/135+ba/134+ba/133+ba/160+ba"
-	Q720Ph264forced  = "place"
-	Q480Ph264forced  = "hello"
-	Q1080P           = "place"
-	Q720P            = "place"
-	Q480P            = "place"
+	Q720Ph264forced  = "298+ba/136+ba/135+ba/134+ba/133+ba/160+ba"
+	Q480Ph264forced  = "135+ba/134+ba/133+ba/160+ba"
+	Q1080P           = "303+ba/248+ba/699+ba/399+ba/302+ba/247+ba/244+ba/243+ba/242+ba/278+ba"
+	Q720P            = "302+ba/247+ba/244+ba/243+ba/242+ba/278+ba"
+	Q480P            = "244+ba/243+ba/242+ba/278+ba"
+	Q1440P           = "308+ba/271+ba/700+ba/400+ba/303+ba/248+ba/699+ba/399+ba/302+ba/247+ba/244+ba/243+ba/242+ba/278+ba"
+	Q2160P           = "315+ba/313+ba/701+ba/401+ba/308+ba/271+ba/700+ba/400+ba/303+ba/248+ba/699+ba/399+ba/302+ba/247+ba/244+ba/243+ba/242+ba/278+ba"
 )
 
 func SetQuality(QualitySelector string) string {
 	switch QualitySelector {
 	case "Q1080Ph264forced":
 		return Q1080Ph264forced
+	case "Q720Ph264forced":
+		return Q720Ph264forced
+	case "Q480Ph264forced":
+		return Q480Ph264forced
+	case "Q1080P":
+		return Q1080P
+	case "Q720P":
+		return Q720P
+	case "Q480P":
+		return Q480P
+	case "Q1440P":
+		return Q1440P
+	case "Q2160P":
+		return Q2160P
+	case "QPoggers":
+		return QPoggers
 	default:
-		return ""
+		return Q1080P
 	}
 }
 

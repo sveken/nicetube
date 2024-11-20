@@ -33,7 +33,7 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 	process := exec.Command(
 		"./yt-dlp",
 		forceformat, QualityValue,
-		"--remux-video", "mp4",
+		"--remux-video", "mp4", "--restrict-filenames",
 		"--ffmpeg-location", "./",
 		"-o", outputname,
 		VideoURL,
@@ -47,8 +47,11 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("Command failed with exit code %d\n", process.ProcessState.ExitCode())
 		fmt.Println(err)
 	}
-	TheDownloadURL := ReturnDownloadURL(savedir, Domain)
+	TheDownloadURL, err := ReturnDownloadURL(savedir, Domain)
 	//fmt.Println(TheDownloadURL)
 	//http.Redirect(w, r, TheDownloadURL, http.StatusSeeOther)
+	if err != nil {
+		fmt.Fprintf(w, "Error, No file was downloaded. Is the URL correct?")
+	}
 	fmt.Fprintf(w, TheDownloadURL)
 }

@@ -82,16 +82,19 @@ func foldergen(VideoID string, savedir string) (string, error) {
 	return savedir, err
 }
 
-func ReturnDownloadURL(savedir string, Domain string) string {
+func ReturnDownloadURL(savedir string, Domain string) (string, error) {
 	//fmt.Printf("Save directory is %s and the URL from Path is %s", savedir, Domain)
-	mp4File, _ := GetFileName(savedir)
+	mp4File, err := GetFileName(savedir)
+	if err != nil {
+		return "", fmt.Errorf("no .mp4 file found in the directory")
+	}
 	//Remove first dot from save directory to make URL from
 	URLFriendlyDirIndex := strings.Index(savedir, ".")
 	URLFriendlyDir := savedir[:URLFriendlyDirIndex] + savedir[URLFriendlyDirIndex+1:]
 	//fmt.Printf("And the Mp4 name is %s", mp4File)
 	//fmt.Println()
 	TheDownloadURL := fmt.Sprintf("http://%s%s/%s", Domain, URLFriendlyDir, mp4File)
-	return TheDownloadURL
+	return TheDownloadURL, err
 }
 
 func GetFileName(savedir string) (string, error) {
@@ -114,5 +117,5 @@ func GetFileName(savedir string) (string, error) {
 		return "", fmt.Errorf("no .mp4 file found in the directory")
 	}
 
-	return mp4File, nil
+	return mp4File, err
 }
