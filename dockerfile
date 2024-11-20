@@ -39,7 +39,7 @@ WORKDIR /home/Nicetube
 RUN mkdir /home/Nicetube/Videos \
 && useradd -m -d /home/Nicetube -s /bin/bash/ container \
 && chown -R container:container /home/Nicetube \
-$$ apt-get update && apt-get install -y --no-install-recommends \ 
+&& apt-get update && apt-get install -y --no-install-recommends \ 
 curl \
 && rm -rf /var/lib/apt/lists/*
 
