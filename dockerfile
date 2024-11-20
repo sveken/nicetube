@@ -42,4 +42,5 @@ RUN mkdir /home/Nicetube/Videos \
 
 STOPSIGNAL SIGINT
 USER container
+HEALTHCHECK --interval=60s --timeout=10s --start-period=5s --retries=3 CMD [ "curl -f http://localhost:8085/health | grep -q "Check passed" || exit 1" ]
 CMD ["./nicetube-linux-amd64"]
