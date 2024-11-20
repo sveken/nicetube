@@ -62,7 +62,7 @@ func urlhelper(path, QualitySelector string) (string, string, error) {
 	// We split out the URL so we are just left with the URL at the end
 	pathParts := strings.Split(path, QualityName)
 	if len(pathParts) < 2 || len(pathParts[1]) < 3 {
-		return "", "", errors.New("missing or invalid video URL")
+		return "", "", errors.New("error: missing or invalid video URL")
 	}
 	// fixing the https:/ thingy with https:// and getting the final video URL
 	VideoURL := strings.Replace(pathParts[1], "https:/", "https://", 1)
@@ -71,12 +71,12 @@ func urlhelper(path, QualitySelector string) (string, string, error) {
 		// Parse the URL to safely extract the query parameter for the v= links
 		parsedURL, err := url.Parse(VideoURL)
 		if err != nil {
-			return "", "", errors.New("failed to parse video URL")
+			return "", "", errors.New("error: failed to parse video URL")
 		}
 		// Extract the "v" query parameter as the VideoID
 		VideoID := parsedURL.Query().Get("v")
 		if VideoID == "" {
-			return "", "", errors.New("missing video ID in URL")
+			return "", "", errors.New("error: missing video ID in URL")
 		}
 		//When we are using a V= type URL, just replace the VideoURL with the VideoID
 		VideoURL = VideoID

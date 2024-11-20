@@ -52,7 +52,7 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 	//fmt.Println(TheDownloadURL)
 	//http.Redirect(w, r, TheDownloadURL, http.StatusSeeOther)
 	if err != nil {
-		fmt.Fprintf(w, "Error, No file was downloaded. Is the URL correct?")
+		fmt.Fprintf(w, "error: No file was downloaded. Is the URL correct?")
 	}
 	fmt.Fprintf(w, TheDownloadURL)
 }
