@@ -29,6 +29,7 @@ func main() {
 	mux.HandleFunc("GET /{$}", homepage)
 	mux.Handle("GET /Videos/", http.StripPrefix("/Videos", disablelisting(fileserver)))
 	mux.HandleFunc("/reso/", GetResoVideos)
+	mux.HandleFunc("GET /health", healthcheck)
 
 	// Logging stuffs
 	logger = slog.New(slog.NewTextHandler(os.Stdout, nil))
