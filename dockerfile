@@ -19,7 +19,7 @@ RUN tar -xf /home/Nicetube/ffmpeg-master-latest-linux64-gpl.tar.xz -C /home/Nice
     && mv $(find /home/Nicetube -type f -name ffmpeg) /home/Nicetube \
     && chmod +x /home/Nicetube/yt-dlp \
     && chmod +x /home/Nicetube/nicetube-linux-amd64 \
-    && chmod +x /home/Nicetube/ffprobe /home/Nicetube/ffplay /home/Nicetube/ffmpeg \
+    && chmod +x /home/Nicetube/ffprobe /home/Nicetube/ffmpeg \
     && rm -rf /home/Nicetube/ffmpeg-master-latest-linux64-gpl.tar.xz \
     && rm -r ./ffmpeg-master-latest-linux64-gpl
 
