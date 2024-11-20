@@ -37,7 +37,7 @@ nicetube also depends on ffmpeg and [yt-dlp](https://github.com/yt-dlp/yt-dlp#in
 1. Download the latest release for your platform into a folder you will use for nicetube
 2. Download the standalone build of [yt-dlp](https://github.com/yt-dlp/yt-dlp#installation) for your platform.
 3. Download the patched ffmpeg from [yt-dlps repo here](https://github.com/yt-dlp/FFmpeg-Builds) for your platform.
-4. Extract the binarys for ffpmpeg, ffprobe, and ffplay into your nicetube folder.
+4. Extract the binarys for ffpmpeg and ffprobe into your nicetube folder.
 5. Run nicetube
 
 ## Docker. 

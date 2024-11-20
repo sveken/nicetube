@@ -16,7 +16,6 @@ ADD https://github.com/sveken/nicetube/releases/latest/download/nicetube-linux-a
 
 RUN tar -xf /home/Nicetube/ffmpeg-master-latest-linux64-gpl.tar.xz -C /home/Nicetube \
     && mv $(find /home/Nicetube -type f -name ffprobe) /home/Nicetube \
-    && mv $(find /home/Nicetube -type f -name ffplay) /home/Nicetube \
     && mv $(find /home/Nicetube -type f -name ffmpeg) /home/Nicetube \
     && chmod +x /home/Nicetube/yt-dlp \
     && chmod +x /home/Nicetube/nicetube-linux-amd64 \
