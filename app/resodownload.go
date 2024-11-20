@@ -13,23 +13,24 @@ import (
 
 func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 	Domain := r.Host
+	//fmt.Println(r.URL.String()) // For troubleshooting
 	QualitySelector := QualityFinder(r.URL.Path)
 	QualityValue := SetQuality(QualitySelector)
 	//fmt.Printf("Hello, you selected %s", QualitySelector)
 	//fmt.Printf("Hello, you selected %s", QualityValue)
 	forceformat := doWeNeedDashf(QualityValue)
-	VideoURL, VideoID, err := urlhelper(r.URL.Path, QualitySelector)
+	VideoURL, VideoID, err := urlhelper(r.URL.String(), QualitySelector)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 	var savedir string
-	savedir, err = foldergen(VideoID, savedir)
+	savedir, err = foldergen(VideoID, savedir, QualitySelector)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	outputname := fmt.Sprintf("./Videos/%s/%%(title)s.%%(ext)s", VideoID)
+	outputname := fmt.Sprintf("%s/%%(title)s.%%(ext)s", savedir)
 	process := exec.Command(
 		"./yt-dlp",
 		forceformat, QualityValue,

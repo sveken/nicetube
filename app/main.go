@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 )
@@ -58,24 +59,45 @@ func disablelisting(next http.Handler) http.Handler {
 
 func urlhelper(path, QualitySelector string) (string, string, error) {
 	QualityName := fmt.Sprintf("%s/", QualitySelector)
+	// We split out the URL so we are just left with the URL at the end
 	pathParts := strings.Split(path, QualityName)
-	if len(pathParts[1]) < 3 {
+	if len(pathParts) < 2 || len(pathParts[1]) < 3 {
 		return "", "", errors.New("missing or invalid video URL")
 	}
 	// fixing the https:/ thingy with https:// and getting the final video URL
 	VideoURL := strings.Replace(pathParts[1], "https:/", "https://", 1)
-	//Generate a unique ID to track the video based off string at the end of the video URL
-	lastSlashPosition := strings.LastIndex(pathParts[1], "/")
-	VideoID := pathParts[1][lastSlashPosition+1:]
-	logger.Info("Getting Youtube video", "URL", VideoURL, "VideoID", VideoID)
-	return VideoURL, VideoID, nil
+
+	if strings.Contains(VideoURL, "watch?v=") {
+		// Parse the URL to safely extract the query parameter for the v= links
+		parsedURL, err := url.Parse(VideoURL)
+		if err != nil {
+			return "", "", errors.New("failed to parse video URL")
+		}
+		// Extract the "v" query parameter as the VideoID
+		VideoID := parsedURL.Query().Get("v")
+		if VideoID == "" {
+			return "", "", errors.New("missing video ID in URL")
+		}
+		//When we are using a V= type URL, just replace the VideoURL with the VideoID
+		VideoURL = VideoID
+		logger.Info("Getting Youtube video", "URL", VideoURL, "VideoID", VideoID)
+		return VideoURL, VideoID, nil
+
+	} else {
+		// Just take the entire string after the last /
+		lastSlashPosition := strings.LastIndex(pathParts[1], "/")
+		VideoID := pathParts[1][lastSlashPosition+1:]
+		logger.Info("Getting Youtube video", "URL", VideoURL, "VideoID", VideoID)
+		return VideoURL, VideoID, nil
+	}
 
 }
 
 // Makes the folder the video lives under using the last bit of the string from the video.
 // This way the video could have the the same name as another video but its still treated as different
-func foldergen(VideoID string, savedir string) (string, error) {
-	savedir = fmt.Sprintf("./Videos/%s", VideoID)
+// Added Quality in too so people can request the same video at different levels incase the cache isn't cleared in time
+func foldergen(VideoID string, savedir string, QualitySelector string) (string, error) {
+	savedir = fmt.Sprintf("./Videos/%s/%s", VideoID, QualitySelector)
 	err := os.MkdirAll(savedir, 0755) // Permissions: rwxr-xr-x
 	if err != nil {
 		fmt.Println("Error creating directory:", err)
