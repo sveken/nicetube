@@ -45,7 +45,7 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 	process.Stderr = io.MultiWriter(os.Stderr, &stderrBuf)
 	//process.Stderr = os.Stderr
 
-	// Use these when outputting to terminal can be reduced
+	// Use these when outputting to terminal can be reduced ie production
 	//process.Stdout = &stdoutBuf
 	//process.Stderr = &stderrBuf
 	err = process.Run()
