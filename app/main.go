@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"errors"
 	"flag"
 	"fmt"
@@ -13,6 +14,9 @@ import (
 
 // Set the Logger to be global
 var logger *slog.Logger
+
+// Set global buffer reader
+var stdoutBuf, stderrBuf bytes.Buffer
 
 func main() {
 	fmt.Println("Hello")
@@ -142,4 +146,14 @@ func GetFileName(savedir string) (string, error) {
 	}
 
 	return mp4File, err
+}
+
+// The Bot check
+func containsBotCheck(output string) bool {
+	return strings.Contains(strings.ToLower(output), "sign in to confirm")
+}
+
+func normalizeOutput(output string) string {
+	// Replace any problematic characters (like �) with a space
+	return strings.ReplaceAll(output, "�", "")
 }
