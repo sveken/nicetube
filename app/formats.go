@@ -51,7 +51,7 @@ func SetQuality(QualitySelector string) string {
 	case "QPoggers":
 		return QPoggers
 	default:
-		return Q1080P
+		return Q720P
 	}
 }
 
