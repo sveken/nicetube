@@ -112,16 +112,16 @@ func foldergen(VideoID string, savedir string, QualitySelector string) (string, 
 
 func ReturnDownloadURL(savedir string, Domain string) (string, error) {
 	//fmt.Printf("Save directory is %s and the URL from Path is %s", savedir, Domain)
-	mp4File, err := GetFileName(savedir)
+	Videofile, err := GetFileName(savedir)
 	if err != nil {
-		return "", fmt.Errorf("no .mp4 file found in the directory")
+		return "", fmt.Errorf("no .mp4 or .webm file found in the directory")
 	}
 	//Remove first dot from save directory to make URL from
 	URLFriendlyDirIndex := strings.Index(savedir, ".")
 	URLFriendlyDir := savedir[:URLFriendlyDirIndex] + savedir[URLFriendlyDirIndex+1:]
 	//fmt.Printf("And the Mp4 name is %s", mp4File)
 	//fmt.Println()
-	TheDownloadURL := fmt.Sprintf("http://%s%s/%s", Domain, URLFriendlyDir, mp4File)
+	TheDownloadURL := fmt.Sprintf("http://%s%s/%s", Domain, URLFriendlyDir, Videofile)
 	return TheDownloadURL, err
 }
 
@@ -132,20 +132,20 @@ func GetFileName(savedir string) (string, error) {
 	}
 
 	// Find the .mp4 file in the directory and extract its name
-	var mp4File string
+	var Videofile string
 	for _, file := range files {
-		if !file.IsDir() && strings.HasSuffix(file.Name(), ".mp4") {
-			mp4File = file.Name()
+		if !file.IsDir() && (strings.HasSuffix(file.Name(), ".mp4") || strings.HasSuffix(file.Name(), ".webm")) {
+			Videofile = file.Name()
 			break
 		}
 	}
 
 	// If no .mp4 file is found
-	if mp4File == "" {
-		return "", fmt.Errorf("no .mp4 file found in the directory")
+	if Videofile == "" {
+		return "", fmt.Errorf("no .mp4 or .webm file found in the directory")
 	}
 
-	return mp4File, err
+	return Videofile, err
 }
 
 // The Bot check
