@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -46,6 +47,6 @@ func runcleaner() {
 	})
 
 	if err != nil {
-		logger.Error("Error walking the file tree: %v", err)
+		logger.Error(fmt.Sprintf("Error walking the file tree: %v", err))
 	}
 }
