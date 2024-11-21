@@ -16,15 +16,14 @@ When used with the linked Resonite mod on import of a link an option is presente
 
 This direct link is pasted into the world instead of the original link, allowing everyone in the world to view the video at the quality you intended.
 
-By Default (For reasons see below) the codec VP9 is used when available, with a fallback to AV1
+By Default the mod is set to use 720P using VP9. This offers a good balance of file size, quality uplift and minimal CPU usage. this can be increased at your own risk with the mod settings. see issues below. 1080P with VP9 should also be fine it can just take a few moments to load the video.
 
 An option to force H264 as the codec can be set which will result in a H264 video at or closest to your set Quality value. 
 
 ### Known issues in resonite
-For some reason the H264 version of videos refuses to load when ```Stream``` is ticked in game. To resolve this the mod will auto untick stream when forcing the H264 codec.
+if max quality is set, it is possible to download 4K 60fps AV1 files. These do not play well in resonite.
 
-This will mean videos with H264 forced will need to fully download for each user before it can be played.
- For this reason VP9 is the default setting.
+The larger the video the longer it can initially take to download and combine the files for you. For very long videos just give it some more time.
 
 # Hosting your own download  server.
 The mod provides some preset servers however you can host your own as long as its accessible via http/https if you want **none local** users to stream the videos.
