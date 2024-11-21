@@ -35,11 +35,13 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 	process := exec.Command(
 		"./yt-dlp",
 		forceformat, QualityValue,
-		"--remux-video", "mp4", "--restrict-filenames",
+		"--restrict-filenames",
 		"--ffmpeg-location", "./",
 		"-o", outputname,
 		VideoURL,
 	)
+
+	//removed the following to try fix "--remux-video", "mp4",
 	// This pipes the output into the buffer for error checking and also the terminal while i build the program.
 	process.Stdout = io.MultiWriter(os.Stdout, &stdoutBuf)
 	process.Stderr = io.MultiWriter(os.Stderr, &stderrBuf)
