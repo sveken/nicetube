@@ -12,7 +12,7 @@ nicetubes is designed as a simple backend for the [Resonite Youtube Proxy Mod](h
 Future goals is to build a web interface and provide a UI for easy copy/pasting for other applications.
 
 ## When combined with the Resonite Mod
-When used with the linked Resonite mod on import of a link an option is presented for ```Proxy Youtube Video```. When this is selected the request is sent to the server specified in the settings for the mod, and returned back in the format specified with a direct link to the .mp4.
+When used with the linked Resonite mod on import of a link an option is presented for ```Proxy Youtube Video```. When this is selected the request is sent to the server specified in the settings for the mod, and returned back in the format specified with a direct link to the .webm.
 
 This direct link is pasted into the world instead of the original link, allowing everyone in the world to view the video at the quality you intended.
 
@@ -38,7 +38,7 @@ nicetube also depends on ffmpeg and [yt-dlp](https://github.com/yt-dlp/yt-dlp#in
 1. Download the latest release for your platform into a folder you will use for nicetube
 2. Download the standalone build of [yt-dlp](https://github.com/yt-dlp/yt-dlp#installation) for your platform.
 3. Download the patched ffmpeg from [yt-dlps repo here](https://github.com/yt-dlp/FFmpeg-Builds) for your platform.
-4. Extract the binarys for ffpmpeg and ffprobe into your nicetube folder.
+4. Extract the binarys for ffpmpeg, ffprobe and yt-dlp into your nicetube folder.
 5. Run nicetube
 
 ## Docker. 
