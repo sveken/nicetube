@@ -63,7 +63,9 @@ Example docker run
 docker run -p 8085:8085 --restart always ghcr.io/sveken/nicetube:main
 ```
 
-## Known issues 
+## Known issues / TODO
 
 - I want the docker image to be smaller.
 - Logging read out is not final
+- make download check faster for preexising files
+- webUI for other uses
