@@ -25,8 +25,10 @@ if max quality is set, it is possible to download 4K 60fps AV1 files. These do n
 
 The larger the video the longer it can initially take to download and combine the files for you. For very long videos just give it some more time.
 
+MP4 files behave funny and sometimes require stream to be unticked. By default nicetube should present a webm to get around this.
+
 # Hosting your own download  server.
-The mod provides some preset servers however you can host your own as long as its accessible via http/https if you want **none local** users to stream the videos.
+The mod provides some preset servers in North America & Australia. However you can host your own as long as its accessible via http/https if you want **none local** users to stream the videos.
 
 ## None docker.
 Latest binaries for multiple platforms can be found [on the release page](https://github.com/sveken/nicetube/releases/latest)
