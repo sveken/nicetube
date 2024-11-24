@@ -6,3 +6,5 @@ app/ffprobe.exe
 *.mp4
 *.exe
 *.part
+*.webm
+*.webm
