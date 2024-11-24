@@ -20,9 +20,9 @@ func QualityFinder(path string) string {
 
 var (
 	QPoggers         = ""
-	Q1080Ph264forced = "299+ba/137+ba/216+ba/298+ba/136+ba/135+ba/134+ba/133+ba/160+ba"
-	Q720Ph264forced  = "298+ba/136+ba/135+ba/134+ba/133+ba/160+ba"
-	Q480Ph264forced  = "135+ba/134+ba/133+ba/160+ba"
+	Q1080Ph264Forced = "299+ba/137+ba/216+ba/298+ba/136+ba/135+ba/134+ba/133+ba/160+ba"
+	Q720Ph264Forced  = "298+ba/136+ba/135+ba/134+ba/133+ba/160+ba"
+	Q480Ph264Forced  = "135+ba/134+ba/133+ba/160+ba"
 	Q1080P           = "303+ba/248+ba/699+ba/399+ba/302+ba/247+ba/244+ba/243+ba/242+ba/278+ba"
 	Q720P            = "302+ba/247+ba/244+ba/243+ba/242+ba/278+ba"
 	Q480P            = "244+ba/243+ba/242+ba/278+ba"
@@ -32,12 +32,12 @@ var (
 
 func SetQuality(QualitySelector string) string {
 	switch QualitySelector {
-	case "Q1080Ph264forced":
-		return Q1080Ph264forced
-	case "Q720Ph264forced":
-		return Q720Ph264forced
-	case "Q480Ph264forced":
-		return Q480Ph264forced
+	case "Q1080Ph264Forced":
+		return Q1080Ph264Forced
+	case "Q720Ph264Forced":
+		return Q720Ph264Forced
+	case "Q480Ph264Forced":
+		return Q480Ph264Forced
 	case "Q1080P":
 		return Q1080P
 	case "Q720P":
