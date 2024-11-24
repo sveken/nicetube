@@ -41,7 +41,7 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 		forceformat, QualityValue,
 		"--restrict-filenames", "--replace-in-metadata", "title", "%", "_",
 		"--ffmpeg-location", "./",
-		"-o", outputname,
+		"-o", outputname, "--",
 		VideoURL,
 	)
 

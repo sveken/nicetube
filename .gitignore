@@ -8,3 +8,4 @@ app/ffprobe.exe
 *.part
 *.webm
 *.webm
+*.mkv
