@@ -150,7 +150,7 @@ func GetFileName(savedir string) (string, error) {
 	// Find the .mp4 file in the directory and extract its name
 	var Videofile string
 	for _, file := range files {
-		if !file.IsDir() && (strings.HasSuffix(file.Name(), ".mp4") || strings.HasSuffix(file.Name(), ".webm")) {
+		if !file.IsDir() && (strings.HasSuffix(file.Name(), ".mp4") || strings.HasSuffix(file.Name(), ".webm") || strings.HasSuffix(file.Name(), ".mkv")) {
 			Videofile = file.Name()
 			break
 		}
@@ -158,7 +158,7 @@ func GetFileName(savedir string) (string, error) {
 
 	// If no .mp4 file is found
 	if Videofile == "" {
-		return "", fmt.Errorf("no .mp4 or .webm file found in the directory")
+		return "", fmt.Errorf("no .mp4, .mkv or .webm file found in the directory")
 	}
 
 	return Videofile, err
