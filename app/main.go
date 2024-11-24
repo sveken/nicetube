@@ -173,3 +173,12 @@ func normalizeOutput(output string) string {
 	// Replace any problematic characters (like �) with a space
 	return strings.ReplaceAll(output, "�", "")
 }
+
+func PrecheckVideo(savedir string, Domain string) (bool, string) {
+	TheDownloadURL, err := ReturnDownloadURL(savedir, Domain)
+	if err != nil {
+		return false, ""
+	}
+	return true, TheDownloadURL
+
+}

@@ -8,10 +8,6 @@ import (
 	"os/exec"
 )
 
-func PreStartResoVideo(w http.ResponseWriter, r *http.Request) {
-
-}
-
 func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 	Domain := r.Host
 	//fmt.Println(r.URL.String()) // For troubleshooting
@@ -29,6 +25,14 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 	savedir, err = foldergen(VideoID, savedir, QualitySelector)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	//Precheck if file is downloaded
+	var VideoExists bool
+	VideoExists, TheDownloadURL := PrecheckVideo(savedir, Domain)
+	if VideoExists {
+		fmt.Fprintf(w, TheDownloadURL)
 		return
 	}
 	outputname := fmt.Sprintf("%s/%%(title)s.%%(ext)s", savedir)
@@ -75,7 +79,7 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	TheDownloadURL, err := ReturnDownloadURL(savedir, Domain)
+	TheDownloadURL, err = ReturnDownloadURL(savedir, Domain)
 	//fmt.Println(TheDownloadURL)
 	//http.Redirect(w, r, TheDownloadURL, http.StatusSeeOther)
 	if err != nil && botblocked != true {
