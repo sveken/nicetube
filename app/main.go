@@ -70,6 +70,8 @@ func urlhelper(path, QualitySelector string) (string, string, error) {
 	}
 	// fixing the https:/ thingy with https:// and getting the final video URL
 	VideoURL := strings.Replace(pathParts[1], "https:/", "https://", 1)
+	// I use this line for troubleshooting cuz i dont string
+	fmt.Printf("The URL we are attempting to download is %s", VideoURL)
 
 	if strings.Contains(VideoURL, "watch?v=") {
 		// Parse the URL to safely extract the query parameter for the v= links
@@ -83,6 +85,20 @@ func urlhelper(path, QualitySelector string) (string, string, error) {
 			return "", "", errors.New("error: missing video ID in URL")
 		}
 		//When we are using a V= type URL, just replace the VideoURL with the VideoID
+		VideoURL = VideoID
+		logger.Info("Getting Youtube video", "URL", VideoURL, "VideoID", VideoID)
+		return VideoURL, VideoID, nil
+	} else if strings.Contains(VideoURL, "youtu.be") {
+		parsedURL, err := url.Parse(VideoURL)
+		if err != nil {
+			return "", "", errors.New("error: failed to parse video URL")
+		}
+		// extract only the ID before the ?
+		VideoID := strings.TrimPrefix(parsedURL.Path, "/")
+		if VideoID == "" {
+			return "", "", errors.New("error: missing video ID in URL")
+		}
+		//This should only return the code before the ? as its its own part?
 		VideoURL = VideoID
 		logger.Info("Getting Youtube video", "URL", VideoURL, "VideoID", VideoID)
 		return VideoURL, VideoID, nil

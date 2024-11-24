@@ -8,9 +8,9 @@ import (
 	"os/exec"
 )
 
-//This actually works and gets everything in avc1/h264 ONLY
-//will Start and fallback in the following order
-//1080P60/1080P30/720P60/720P30/480p/360p/240p/144p
+func PreStartResoVideo(w http.ResponseWriter, r *http.Request) {
+
+}
 
 func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 	Domain := r.Host
