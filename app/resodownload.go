@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"time"
 )
 
 func GetResoVideos(w http.ResponseWriter, r *http.Request) {
@@ -78,6 +79,10 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 		botblocked = true
 
 	}
+
+	//For some reason, sometimes if a video takes awhile to merge the logic continues anyway and pulls a part number as the URL
+	//This gives a 1 second delay so the invalid part files can be deleted.
+	time.Sleep(1 * time.Second)
 
 	TheDownloadURL, err = ReturnDownloadURL(savedir, Domain)
 	//fmt.Println(TheDownloadURL)
