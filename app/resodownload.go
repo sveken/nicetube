@@ -41,7 +41,7 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 		"./yt-dlp",
 		forceformat, QualityValue,
 		"--restrict-filenames", "--replace-in-metadata", "title", "%", "_",
-		"--ffmpeg-location", "./",
+		"--ffmpeg-location", "./", "--remux-video", "mp4",
 		"-o", outputname, "--",
 		VideoURL,
 	)
