@@ -164,11 +164,6 @@ func GetFileName(savedir string) (string, error) {
 	return Videofile, err
 }
 
-// The Bot check
-func containsBotCheck(output string) bool {
-	return strings.Contains(strings.ToLower(output), "sign in to confirm")
-}
-
 func normalizeOutput(output string) string {
 	// Replace any problematic characters (like �) with a space
 	return strings.ReplaceAll(output, "�", "")

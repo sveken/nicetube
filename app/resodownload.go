@@ -36,6 +36,17 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, TheDownloadURL)
 		return
 	}
+
+	//Set Duration Limit for the funny people.
+	duration, err := getVideoDuration(VideoURL)
+	if err != nil {
+		fmt.Printf("Error fetching video duration: %v\n", err)
+	}
+	if duration > 2*time.Hour {
+		logger.Error("Error: Video over 2 hours")
+		fmt.Fprintf(w, "error: Video over two hours.")
+		return
+	}
 	outputname := fmt.Sprintf("%s/%%(title)s.%%(ext)s", savedir)
 	process := exec.Command(
 		"./yt-dlp",
