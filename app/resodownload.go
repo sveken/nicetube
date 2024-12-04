@@ -33,6 +33,7 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 	LockKey := fmt.Sprintf("%s_%s", VideoID, QualitySelector)
 	mutex := mm.GetMutex(LockKey)
 	mutex.Lock()
+	defer mm.ReleaseMutex(LockKey)
 	defer mutex.Unlock()
 
 	//Precheck if file is downloaded

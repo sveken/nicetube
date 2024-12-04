@@ -14,13 +14,19 @@ import (
 // Telling Go what our Map will be, need to actually make it after this.
 type MutexMap struct {
 	mu      sync.Mutex
-	mutexes map[string]*sync.Mutex
+	mutexes map[string]*mutexTracker
+}
+
+// This counts how many downloads are waiting or using a download mutex, if 0 we can cleanup.
+type mutexTracker struct {
+	mutex *sync.Mutex
+	count int
 }
 
 // This holds and keeps track of all the Mutexes we have in play.
 func NewMutexMap() *MutexMap {
 	return &MutexMap{
-		mutexes: make(map[string]*sync.Mutex),
+		mutexes: make(map[string]*mutexTracker),
 	}
 }
 
@@ -31,10 +37,28 @@ func (mm *MutexMap) GetMutex(LockKey string) *sync.Mutex {
 	mm.mu.Lock()
 	defer mm.mu.Unlock()
 
-	if _, exists := mm.mutexes[LockKey]; !exists {
-		mm.mutexes[LockKey] = &sync.Mutex{}
+	tracker, exists := mm.mutexes[LockKey]
+	if !exists {
+		tracker = &mutexTracker{mutex: &sync.Mutex{}, count: 0}
+		mm.mutexes[LockKey] = tracker
+		//fmt.Println("Mutex didnt exist so i made it")
 	}
-	return mm.mutexes[LockKey]
+	tracker.count++
+	//fmt.Println("Increased Mutex")
+	return tracker.mutex
+}
+
+// Mutex tracker cleanup, As not removing them when not required will slowly increase memory usage.
+func (mm *MutexMap) ReleaseMutex(LockKey string) {
+	mm.mu.Lock()
+	defer mm.mu.Unlock()
+	if tracker, exists := mm.mutexes[LockKey]; exists {
+		tracker.count--
+		if tracker.count <= 0 {
+			delete(mm.mutexes, LockKey)
+			//fmt.Println("Deleted Last Mutex Ref")
+		}
+	}
 }
 
 // Get the Duration of the video
