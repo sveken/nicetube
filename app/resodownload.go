@@ -29,6 +29,12 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//Lock out the Quality and VideoID combination until it errors or downloads to stop multiple download jobs for the same video running over the top of each other.
+	LockKey := fmt.Sprintf("%s_%s", VideoID, QualitySelector)
+	mutex := mm.GetMutex(LockKey)
+	mutex.Lock()
+	defer mutex.Unlock()
+
 	//Precheck if file is downloaded
 	var VideoExists bool
 	VideoExists, TheDownloadURL := PrecheckVideo(savedir, Domain)

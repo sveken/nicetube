@@ -18,8 +18,11 @@ var logger *slog.Logger
 // Set global buffer reader
 var stdoutBuf, stderrBuf bytes.Buffer
 
+// Set the Mutex map up for global use
+var mm = NewMutexMap()
+
 func main() {
-	fmt.Println("Hello")
+	fmt.Println("You are running Test")
 	// Reading any command line flags and adjust the config
 	//When we go to docker the start up bach script should do this passing the envoirmetnal variables to the flag
 	//Not used yet
@@ -124,56 +127,4 @@ func foldergen(VideoID string, savedir string, QualitySelector string) (string, 
 		return savedir, err
 	}
 	return savedir, err
-}
-
-func ReturnDownloadURL(savedir string, Domain string) (string, error) {
-	//fmt.Printf("Save directory is %s and the URL from Path is %s", savedir, Domain)
-	Videofile, err := GetFileName(savedir)
-	if err != nil {
-		return "", fmt.Errorf("no .mp4 or .webm file found in the directory")
-	}
-	//Remove first dot from save directory to make URL from
-	URLFriendlyDirIndex := strings.Index(savedir, ".")
-	URLFriendlyDir := savedir[:URLFriendlyDirIndex] + savedir[URLFriendlyDirIndex+1:]
-	//fmt.Printf("And the Mp4 name is %s", mp4File)
-	//fmt.Println()
-	TheDownloadURL := fmt.Sprintf("http://%s%s/%s", Domain, URLFriendlyDir, Videofile)
-	return TheDownloadURL, err
-}
-
-func GetFileName(savedir string) (string, error) {
-	files, err := os.ReadDir(savedir)
-	if err != nil {
-		return "", fmt.Errorf("failed to read directory: %v", err)
-	}
-
-	// Find the .mp4 file in the directory and extract its name
-	var Videofile string
-	for _, file := range files {
-		if !file.IsDir() && (strings.HasSuffix(file.Name(), ".mp4") || strings.HasSuffix(file.Name(), ".webm") || strings.HasSuffix(file.Name(), ".mkv")) {
-			Videofile = file.Name()
-			break
-		}
-	}
-
-	// If no .mp4 file is found
-	if Videofile == "" {
-		return "", fmt.Errorf("no .mp4, .mkv or .webm file found in the directory")
-	}
-
-	return Videofile, err
-}
-
-func normalizeOutput(output string) string {
-	// Replace any problematic characters (like �) with a space
-	return strings.ReplaceAll(output, "�", "")
-}
-
-func PrecheckVideo(savedir string, Domain string) (bool, string) {
-	TheDownloadURL, err := ReturnDownloadURL(savedir, Domain)
-	if err != nil {
-		return false, ""
-	}
-	return true, TheDownloadURL
-
 }
