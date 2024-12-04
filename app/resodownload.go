@@ -49,7 +49,7 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Printf("Error fetching video duration: %v\n", err)
 	}
-	if duration > 2*time.Hour {
+	if duration > time.Duration(maxDuration)*time.Minute {
 		logger.Error("Error: Video over 2 hours")
 		fmt.Fprintf(w, "error: Video over two hours.")
 		return

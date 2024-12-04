@@ -21,13 +21,25 @@ var stdoutBuf, stderrBuf bytes.Buffer
 // Set the Mutex map up for global use
 var mm = NewMutexMap()
 
+// Set some Global Variables from the environment / default
+var maxDuration int = 120
+var maxvideoage int = 24
+
 func main() {
 	fmt.Println("You are running Test")
 	// Reading any command line flags and adjust the config
 	//When we go to docker the start up bach script should do this passing the envoirmetnal variables to the flag
 	//Not used yet
 	addr := flag.String("addr", ":8085", "HTTP Server address")
+	flag.IntVar(&maxDuration, "maxDuration", 120, "Max Video Duration in minutes")
+	flag.IntVar(&maxvideoage, "max-video-age", 24, "The max age of a video before it is deleted by the cleaner in hours. Set to 0 to disable cleaner")
 	flag.Parse()
+	fmt.Printf("Max Duration of videos is set too %v minutes", maxDuration)
+	fmt.Println()
+	fmt.Printf("Max Video age has been set to %v hours", maxvideoage)
+	//fmt.Printf("Max video age flag is %v", maxvideoage)
+	fmt.Println()
+
 	//fmt.Printf("Running with options %s", *addr)
 	mux := http.NewServeMux()
 	//Change this to /Video for container use...actually Just bind the Video folder under this in docker compose
@@ -42,7 +54,12 @@ func main() {
 	// Logging stuffs
 	logger = slog.New(slog.NewTextHandler(os.Stdout, nil))
 	logger.Info("Starting the webserver on", "addr", *addr)
-	go cleaner()
+	//Allow users to disable the cleaner.
+	if maxvideoage > 0 {
+		go cleaner()
+	} else {
+		fmt.Println("The cleaner has been disabled. Please monitor your disk usage.")
+	}
 	err := http.ListenAndServe(*addr, mux)
 	logger.Error(err.Error())
 	os.Exit(1)

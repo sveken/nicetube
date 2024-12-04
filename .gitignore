@@ -10,3 +10,4 @@ app/ffprobe.exe
 *.webm
 *.mkv
 app/nicetube-linux-amd64
+.vscode/launch.json
