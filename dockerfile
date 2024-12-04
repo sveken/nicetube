@@ -45,4 +45,4 @@ curl \
 STOPSIGNAL SIGINT
 USER container
 HEALTHCHECK --interval=60s --timeout=10s --start-period=5s --retries=3 CMD curl -fs http://localhost:8085/health | grep -q "Check passed" && echo "Check passed" || exit 1
-CMD ["./nicetube-linux-amd64"]
+CMD ["./nicetube-linux-amd64", "-maxDuration ${maxDuration:-120}", "-maxvideoage ${max-video-age:-24}", "-addr ${addr:-:8085}"]

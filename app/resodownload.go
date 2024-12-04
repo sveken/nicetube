@@ -50,8 +50,8 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("Error fetching video duration: %v\n", err)
 	}
 	if duration > time.Duration(maxDuration)*time.Minute {
-		logger.Error("Error: Video over 2 hours")
-		fmt.Fprintf(w, "error: Video over two hours.")
+		logger.Error("Error: Video over the set max Duration")
+		fmt.Fprintf(w, "error: Video over the set max Duration of %v minutes of this server", maxDuration)
 		return
 	}
 	outputname := fmt.Sprintf("%s/%%(title)s.%%(ext)s", savedir)
