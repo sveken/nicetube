@@ -1,6 +1,9 @@
 services:
   Nicetube:
     image: ghcr.io/sveken/nicetube:main
+    environment:
+      maxDuration: 120 #Max Video length in minutes, default is 2 hours.
+      max_video_age: 24 #Max length of time in hours videos will be cached on disk before being cleaned. Set to 0 to disable
     ports:
       - "8085:8085"
     #volumes:

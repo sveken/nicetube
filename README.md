@@ -18,14 +18,14 @@ This direct link is pasted into the world instead of the original link, allowing
 
 By Default the mod is set to use 720P using VP9. This offers a good balance of file size, quality uplift and minimal CPU usage. this can be increased at your own risk with the mod settings. see issues below. 1080P with VP9 should also be fine it can just take a few moments to load the video.
 
-An option to force H264 as the codec can be set which will result in a H264 video at or closest to your set Quality value. 
+An option to force H264 as the codec can be set which will result in a H264 video at or closest to your set Quality value. These files seem to have lower visual quality to the VP9 versions and larger sizes but can be more reliable with high fps videos.
 
 ### Known issues in resonite
 if max quality is set, it is possible to download 4K 60fps AV1 files. These do not play well in resonite.
 
 The larger the video the longer it can initially take to download and combine the files for you. For very long videos just give it some more time.
 
-MP4 files behave funny and sometimes require stream to be unticked. By default nicetube should present a webm to get around this.
+Long 60fps videos in VP9 sometimes do not play with sound or other weird issues. Forcing h264 fixes these but H264 does reduce the visual quality and increase size.
 
 # Hosting your own download  server.
 The mod provides some preset servers in North America & Australia. However you can host your own as long as its accessible via http/https if you want **none local** users to stream the videos.
@@ -41,6 +41,8 @@ nicetube also depends on ffmpeg and [yt-dlp](https://github.com/yt-dlp/yt-dlp#in
 4. Extract the binarys for ffpmpeg, ffprobe and yt-dlp into your nicetube folder.
 5. Run nicetube
 
+Configurable Flags can found with -help
+
 ## Docker. 
 Latest docker compose file can be found in the root of this repo. 
 
@@ -50,6 +52,9 @@ Example compose file
 services:
   Nicetube:
     image: ghcr.io/sveken/nicetube:main
+    environment:
+      maxDuration: 120 #Max Video length in minutes, default is 2 hours.
+      max_video_age: 24 #Max length of time in hours videos will be cached on disk before being cleaned. Set to 0 to disable
     ports:
       - "8085:8085"
     #volumes:
@@ -58,7 +63,7 @@ services:
     restart: always
 ```
 
-Example docker run
+Example docker run with default settings.
 ```
 docker run -p 8085:8085 --restart always ghcr.io/sveken/nicetube:main
 ```
