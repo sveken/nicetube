@@ -40,7 +40,7 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 	var VideoExists bool
 	VideoExists, TheDownloadURL := PrecheckVideo(savedir, Domain)
 	if VideoExists {
-		fmt.Fprintf(w, TheDownloadURL)
+		fmt.Fprint(w, TheDownloadURL)
 		return
 	}
 
@@ -108,5 +108,5 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 	if err != nil && botblocked != true {
 		fmt.Fprintf(w, "error: No file was downloaded. Is the URL correct?")
 	}
-	fmt.Fprintf(w, TheDownloadURL)
+	fmt.Fprint(w, TheDownloadURL)
 }
