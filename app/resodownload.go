@@ -110,6 +110,8 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "error: YouTube has blocked this IP or server. Please swap to another or notify the host.")
 		botblocked = true
 
+	} else {
+		botblocked = false
 	}
 
 	//For some reason, sometimes if a video takes awhile to merge the logic continues anyway and pulls a part number as the URL
