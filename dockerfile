@@ -35,7 +35,7 @@ ENV HOME=/home/Nicetube
 ENV	DEBIAN_FRONTEND=noninteractive
 COPY --from=stage1 /home/Nicetube /home/Nicetube 
 WORKDIR /home/Nicetube
-RUN mkdir /home/Nicetube/Videos \
+RUN mkdir /home/Nicetube/Videos \ && mkdir /home/Nicetube/Cookies \
 && useradd -m -d /home/Nicetube -s /bin/bash/ container \
 && chown -R container:container /home/Nicetube \
 && apt-get update && apt-get install -y --no-install-recommends \ 
@@ -45,4 +45,4 @@ curl \
 STOPSIGNAL SIGINT
 USER container
 HEALTHCHECK --interval=60s --timeout=10s --start-period=5s --retries=3 CMD curl -fs http://localhost:8085/health | grep -q "Check passed" && echo "Check passed" || exit 1
-CMD ["sh", "-c", "./nicetube-linux-amd64 -maxDuration ${maxDuration:-120} -max-video-age ${max_video_age:-24} -addr ${addr:-:8085}"]
+CMD ["sh", "-c", "./nicetube-linux-amd64 -maxDuration ${maxDuration:-120} -max-video-age ${max_video_age:-24} -addr ${addr:-:8085} -cookie ${cookies:-n}"]

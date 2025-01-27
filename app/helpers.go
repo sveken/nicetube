@@ -9,6 +9,7 @@ import (
 	"strings"
 	"sync"
 	"time"
+	"unicode/utf8"
 )
 
 // Telling Go what our Map will be, need to actually make it after this.
@@ -62,13 +63,13 @@ func (mm *MutexMap) ReleaseMutex(LockKey string) {
 }
 
 // Get the Duration of the video
-func getVideoDuration(VideoURL string) (time.Duration, error) {
-	process := exec.Command(
-		"./yt-dlp",
-		"--dump-json",
-		"--no-warnings", // Suppress warnings
-		VideoURL,
-	)
+func getVideoDuration(VideoURL string, cookieset string) (time.Duration, error) {
+	var args []string
+	if cookieset != "" {
+		args = append(args, "--cookies", cookieset)
+	}
+	args = append(args, "--dump-json", "--no-warnings", VideoURL)
+	process := exec.Command("./yt-dlp", args...)
 
 	var output bytes.Buffer
 	process.Stdout = &output
@@ -142,4 +143,12 @@ func PrecheckVideo(savedir string, Domain string) (bool, string) {
 	}
 	return true, TheDownloadURL
 
+}
+
+func enablecookies() string {
+	// Check if the cookie value is over 2 characters and if it is pass the cookies command
+	if cookieLocation != "" && utf8.RuneCountInString(cookieLocation) > 2 {
+		return cookieLocation
+	}
+	return ""
 }

@@ -11,3 +11,4 @@ app/ffprobe.exe
 *.mkv
 app/nicetube-linux-amd64
 .vscode/launch.json
+app/cookies.txt

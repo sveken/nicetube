@@ -43,9 +43,11 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, TheDownloadURL)
 		return
 	}
+	// Enable Cookie paramaters if the cookie location is set
+	cookieset := enablecookies()
 
 	//Set Duration Limit for the funny people.
-	duration, err := getVideoDuration(VideoURL)
+	duration, err := getVideoDuration(VideoURL, cookieset)
 	if err != nil {
 		fmt.Printf("Error fetching video duration: %v\n", err)
 	}
@@ -54,15 +56,27 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "error: Video over the set max Duration of %v minutes of this server", maxDuration)
 		return
 	}
+
 	outputname := fmt.Sprintf("%s/%%(title)s.%%(ext)s", savedir)
-	process := exec.Command(
-		"./yt-dlp",
+
+	var args []string
+
+	if cookieset != "" {
+		args = append(args, "--cookies", cookieset)
+	}
+
+	args = append(args,
 		forceformat, QualityValue,
 		"--restrict-filenames", "--replace-in-metadata", "title", "%", "_",
 		"--ffmpeg-location", "./",
 		"-o", outputname, "--",
 		VideoURL,
 	)
+
+	//To test what command is getting passed to ytdlp
+	//fmt.Println(args)
+
+	process := exec.Command("./yt-dlp", args...)
 
 	//removed the following to try fix "--remux-video", "mp4",
 	// This pipes the output into the buffer for error checking and also the terminal while i build the program.
