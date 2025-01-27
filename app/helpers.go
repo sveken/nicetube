@@ -9,6 +9,7 @@ import (
 	"strings"
 	"sync"
 	"time"
+	"unicode/utf8"
 )
 
 // Telling Go what our Map will be, need to actually make it after this.
@@ -142,4 +143,12 @@ func PrecheckVideo(savedir string, Domain string) (bool, string) {
 	}
 	return true, TheDownloadURL
 
+}
+
+func enablecookies() string {
+	// Check if the cookie value is over 2 characters and if it is pass the cookies command
+	if cookieLocation != "" && utf8.RuneCountInString(cookieLocation) > 2 {
+		return fmt.Sprintf("--cookies %s", cookieLocation)
+	}
+	return ""
 }

@@ -24,13 +24,15 @@ var mm = NewMutexMap()
 // Set some Global Variables from the environment / default
 var maxDuration int = 120
 var maxvideoage int = 24
+var cookieLocation string
 
 func main() {
-	fmt.Println("You are running version 0.7.3")
+	fmt.Println("You are running version 0.8.0")
 	// Reading any command line flags and adjust the config
 	//When we go to docker the start up bach script should do this passing the envoirmetnal variables to the flag
 	//Not used yet
 	addr := flag.String("addr", ":8085", "HTTP Server address")
+	flag.StringVar(&cookieLocation, "cookie-location", "", "Location of the cookie file")
 	flag.IntVar(&maxDuration, "maxDuration", 120, "Max Video Duration in minutes")
 	flag.IntVar(&maxvideoage, "max-video-age", 24, "The max age of a video before it is deleted by the cleaner in hours. Set to 0 to disable cleaner")
 	flag.Parse()

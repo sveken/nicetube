@@ -54,10 +54,13 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "error: Video over the set max Duration of %v minutes of this server", maxDuration)
 		return
 	}
+
+	// Enable Cookie paramaters if the cookie location is set
+	cookieset := enablecookies()
 	outputname := fmt.Sprintf("%s/%%(title)s.%%(ext)s", savedir)
 	process := exec.Command(
 		"./yt-dlp",
-		forceformat, QualityValue,
+		forceformat, QualityValue, cookieset,
 		"--restrict-filenames", "--replace-in-metadata", "title", "%", "_",
 		"--ffmpeg-location", "./",
 		"-o", outputname, "--",
