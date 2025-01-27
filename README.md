@@ -71,5 +71,5 @@ docker run -p 8085:8085 --restart always ghcr.io/sveken/nicetube:main
 ## Known issues / TODO
 
 - I want the docker image to be smaller.
-- Logging read out is not final
+- Logging read out is not final.
 - webUI for other uses
