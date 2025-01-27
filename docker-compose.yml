@@ -9,4 +9,5 @@ services:
     #volumes:
     #Uncomment if you want to store the video files elsewhere. Otherwise it will store them inside the container, which gets wiped every recreation/update.
      # - /Mydatapth:/home/Nicetube/Videos 
+     # - /PathToCookieFolder:/home/Nicetube/Cookies
     restart: always
