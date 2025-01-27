@@ -32,7 +32,7 @@ func main() {
 	//When we go to docker the start up bach script should do this passing the envoirmetnal variables to the flag
 	//Not used yet
 	addr := flag.String("addr", ":8085", "HTTP Server address")
-	flag.StringVar(&cookieLocation, "cookie-location", "", "Location of the cookie file")
+	flag.StringVar(&cookieLocation, "cookie", "", "Location of the cookie file")
 	flag.IntVar(&maxDuration, "maxDuration", 120, "Max Video Duration in minutes")
 	flag.IntVar(&maxvideoage, "max-video-age", 24, "The max age of a video before it is deleted by the cleaner in hours. Set to 0 to disable cleaner")
 	flag.Parse()

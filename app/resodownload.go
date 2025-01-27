@@ -58,14 +58,25 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 	// Enable Cookie paramaters if the cookie location is set
 	cookieset := enablecookies()
 	outputname := fmt.Sprintf("%s/%%(title)s.%%(ext)s", savedir)
-	process := exec.Command(
-		"./yt-dlp",
-		forceformat, QualityValue, cookieset,
+
+	var args []string
+
+	if cookieset != "" {
+		args = append(args, "--cookies", cookieset)
+	}
+
+	args = append(args,
+		forceformat, QualityValue,
 		"--restrict-filenames", "--replace-in-metadata", "title", "%", "_",
 		"--ffmpeg-location", "./",
 		"-o", outputname, "--",
 		VideoURL,
 	)
+
+	//To test what command is getting passed to ytdlp
+	fmt.Println(args)
+
+	process := exec.Command("./yt-dlp", args...)
 
 	//removed the following to try fix "--remux-video", "mp4",
 	// This pipes the output into the buffer for error checking and also the terminal while i build the program.

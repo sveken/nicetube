@@ -148,7 +148,7 @@ func PrecheckVideo(savedir string, Domain string) (bool, string) {
 func enablecookies() string {
 	// Check if the cookie value is over 2 characters and if it is pass the cookies command
 	if cookieLocation != "" && utf8.RuneCountInString(cookieLocation) > 2 {
-		return fmt.Sprintf("--cookies %s", cookieLocation)
+		return cookieLocation
 	}
 	return ""
 }
