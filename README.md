@@ -55,11 +55,13 @@ services:
     environment:
       maxDuration: 120 #Max Video length in minutes, default is 2 hours.
       max_video_age: 24 #Max length of time in hours videos will be cached on disk before being cleaned. Set to 0 to disable
+      #cookies: "Cookies/cookies.txt" ## Uncomment this to enable cookie support, Please Read cookie info on github
     ports:
       - "8085:8085"
     #volumes:
     #Uncomment if you want to store the video files elsewhere. Otherwise it will store them inside the container, which gets wiped every recreation/update.
      # - /Mydatapth:/home/Nicetube/Videos 
+     # - /PathToCookieFolder:/home/Nicetube/Cookies ##Uncomment to specify a folder containing your cookie text file
     restart: always
 ```
 
@@ -68,6 +70,10 @@ Example docker run with default settings.
 docker run -p 8085:8085 --restart always ghcr.io/sveken/nicetube:main
 ```
 
+## Cookies 
+To extract a cookies file to get around age restriction or bot check you will need to sign into youtube on a computer. Then export those cookies for example using yt-dlp ``.\yt-dlp.exe --cookies-from-browser firefox --cookies cookies.txt``. 
+
+Then place the cookies.txt file inside the folder you are mapping with docker or next to nicetube if running stand alone. Standalone flag is ``-cookie thefilehere.txt``
 ## Known issues / TODO
 
 - I want the docker image to be smaller.
