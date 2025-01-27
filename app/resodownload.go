@@ -43,9 +43,11 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, TheDownloadURL)
 		return
 	}
+	// Enable Cookie paramaters if the cookie location is set
+	cookieset := enablecookies()
 
 	//Set Duration Limit for the funny people.
-	duration, err := getVideoDuration(VideoURL)
+	duration, err := getVideoDuration(VideoURL, cookieset)
 	if err != nil {
 		fmt.Printf("Error fetching video duration: %v\n", err)
 	}
@@ -55,8 +57,6 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Enable Cookie paramaters if the cookie location is set
-	cookieset := enablecookies()
 	outputname := fmt.Sprintf("%s/%%(title)s.%%(ext)s", savedir)
 
 	var args []string
@@ -74,7 +74,7 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 	)
 
 	//To test what command is getting passed to ytdlp
-	fmt.Println(args)
+	//fmt.Println(args)
 
 	process := exec.Command("./yt-dlp", args...)
 
