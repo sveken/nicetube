@@ -41,6 +41,7 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 	VideoExists, TheDownloadURL := PrecheckVideo(savedir, Domain)
 	if VideoExists {
 		fmt.Fprint(w, TheDownloadURL)
+		fmt.Printf("The file %s already exists", TheDownloadURL)
 		return
 	}
 	// Enable Cookie paramaters if the cookie location is set
@@ -72,7 +73,9 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 		"-o", outputname, "--",
 		VideoURL,
 	)
-
+	// Reset Buffers so the botcheck clears the previous output
+	stdoutBuf.Reset()
+	stderrBuf.Reset()
 	//To test what command is getting passed to ytdlp
 	//fmt.Println(args)
 
@@ -109,6 +112,7 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 		logger.Error("Error: Bot confirmation required. Please sign in to continue. This IP may be blacklisted by Youtube")
 		fmt.Fprintf(w, "error: YouTube has blocked this IP or server. Please swap to another or notify the host.")
 		botblocked = true
+		return
 
 	} else {
 		botblocked = false
@@ -123,6 +127,11 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 	//http.Redirect(w, r, TheDownloadURL, http.StatusSeeOther)
 	if err != nil && botblocked != true {
 		fmt.Fprintf(w, "error: No file was downloaded. Is the URL correct?")
+		return
 	}
 	fmt.Fprint(w, TheDownloadURL)
+
+	// Add a little counter that shows how many videos have been downloaded since startup. This will only count new downloads
+	downloadCounter++
+	fmt.Printf("Total Video downloads this session: %d\n", downloadCounter)
 }

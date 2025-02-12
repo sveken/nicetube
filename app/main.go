@@ -25,9 +25,10 @@ var mm = NewMutexMap()
 var maxDuration int = 120
 var maxvideoage int = 24
 var cookieLocation string
+var downloadCounter int
 
 func main() {
-	fmt.Println("You are running version 0.8.0")
+	fmt.Println("You are running version 0.8.2")
 	// Reading any command line flags and adjust the config
 	//When we go to docker the start up bach script should do this passing the envoirmetnal variables to the flag
 	//Not used yet
