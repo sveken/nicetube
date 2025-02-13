@@ -39,9 +39,13 @@ COPY --from=stage1 /etc/passwd /etc/passwd
 USER 1000
 WORKDIR /home/Nicetube
 ENV HOME=/home/Nicetube
+ENV maxDuration=120 \
+    max_video_age=24 \
+    addr=:8085 \
+    cookies=n
 
 STOPSIGNAL SIGINT
 HEALTHCHECK --interval=60s --timeout=10s --start-period=5s --retries=3 \
   CMD ["./nicetube-linux-amd64", "-checkhealth"]
-CMD ["./nicetube-linux-amd64", "-maxDuration", "${maxDuration:-120}", "-max-video-age", "${max_video_age:-24}", "-addr", "${addr:-:8085}", "-cookie", "${cookies:-n}"]
+CMD ["./nicetube-linux-amd64", "-maxDuration", "$maxDuration", "-max-video-age", "$max_video_age", "-addr", "$addr", "-cookie", "$cookies"]
 
