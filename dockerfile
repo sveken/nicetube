@@ -9,9 +9,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /home/Nicetube
-RUN useradd -m -u 1000 container && \
-    mkdir -p /home/Nicetube/Videos /home/Nicetube/Cookies && \
-    chown -R container:container /home/Nicetube
+
 ADD https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux ./yt-dlp
 ADD https://github.com/yt-dlp/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz ./ffmpeg-master-latest-linux64-gpl.tar.xz
 ADD https://github.com/sveken/nicetube/releases/latest/download/nicetube-linux-amd64 ./nicetube-linux-amd64
@@ -25,8 +23,9 @@ RUN tar -xf /home/Nicetube/ffmpeg-master-latest-linux64-gpl.tar.xz -C /home/Nice
     && rm -rf /home/Nicetube/ffmpeg-master-latest-linux64-gpl.tar.xz \
     && rm -r ./ffmpeg-master-latest-linux64-gpl
 
-
-RUN chown -R container:container /home/Nicetube
+RUN useradd -m -u 1000 container && \
+    mkdir -p /home/Nicetube/Videos /home/Nicetube/Cookies && \
+    chown -R container:container /home/Nicetube
 
 #Stage 2
 FROM scratch
