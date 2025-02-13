@@ -24,6 +24,7 @@ RUN tar -xf /home/Nicetube/ffmpeg-master-latest-linux64-gpl.tar.xz -C /home/Nice
     && rm -r ./ffmpeg-master-latest-linux64-gpl
 
 RUN useradd -m -u 1000 container && \
+    mkdir -p /home/Nicetube/Videos /home/Nicetube/Cookies && \
     chown -R container:container /home/Nicetube
 
 #Stage 2
@@ -38,7 +39,6 @@ COPY --from=stage1 /etc/passwd /etc/passwd
 USER 1000
 WORKDIR /home/Nicetube
 ENV HOME=/home/Nicetube
-RUN mkdir -p Videos Cookies && chown -R 1000:1000 /home/Nicetube
 
 STOPSIGNAL SIGINT
 HEALTHCHECK --interval=60s --timeout=10s --start-period=5s --retries=3 \
