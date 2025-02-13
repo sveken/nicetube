@@ -28,7 +28,7 @@ RUN useradd -m -u 1000 container && \
     chown -R container:container /home/Nicetube
 
 #Stage 2
-FROM scratch
+FROM gcr.io/distroless/base-debian12
 LABEL org.opencontainers.image.authors="Sveken"
 LABEL org.opencontainers.image.title="Nicetube"
 LABEL org.opencontainers.image.source=https://github.com/sveken/nicetube
