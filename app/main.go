@@ -26,6 +26,7 @@ var maxDuration int = 120
 var maxvideoage int = 24
 var cookieLocation string
 var downloadCounter int
+var botblocked bool
 
 func main() {
 	fmt.Println("You are running version 0.8.2")
@@ -36,7 +37,14 @@ func main() {
 	flag.StringVar(&cookieLocation, "cookie", "", "Location of the cookie file")
 	flag.IntVar(&maxDuration, "maxDuration", 120, "Max Video Duration in minutes")
 	flag.IntVar(&maxvideoage, "max-video-age", 24, "The max age of a video before it is deleted by the cleaner in hours. Set to 0 to disable cleaner")
+	checkhealth := flag.Bool("checkhealth", false, "Performs a health check, this is used in docker image.")
 	flag.Parse()
+
+	//Perform the health check if this is just a health check.
+
+	if *checkhealth {
+		healthcheck(*addr)
+	}
 	fmt.Printf("Max Duration of videos is set too %v minutes", maxDuration)
 	fmt.Println()
 	fmt.Printf("Max Video age has been set to %v hours", maxvideoage)
@@ -52,7 +60,7 @@ func main() {
 	mux.HandleFunc("GET /{$}", homepage)
 	mux.Handle("GET /Videos/", http.StripPrefix("/Videos", disablelisting(fileserver)))
 	mux.HandleFunc("/reso/", GetResoVideos)
-	mux.HandleFunc("GET /health", healthcheck)
+	mux.HandleFunc("GET /health", healthservice)
 
 	// Logging stuffs
 	logger = slog.New(slog.NewTextHandler(os.Stdout, nil))
