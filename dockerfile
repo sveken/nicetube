@@ -23,7 +23,9 @@ RUN tar -xf /home/Nicetube/ffmpeg-master-latest-linux64-gpl.tar.xz -C /home/Nice
     && rm -rf /home/Nicetube/ffmpeg-master-latest-linux64-gpl.tar.xz \
     && rm -r ./ffmpeg-master-latest-linux64-gpl
 
-RUN mkdir -p /home/Nicetube/Videos /home/Nicetube/Cookies
+RUN mkdir -p /home/Nicetube/Videos /home/Nicetube/Cookies \
+    && useradd -m -d /home/Nicetube -s /bin/bash container \
+    && chown -R container:container /home/Nicetube
 
 #Stage 2
 FROM debian:bookworm-slim
