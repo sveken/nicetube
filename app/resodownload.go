@@ -106,7 +106,6 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 
 	// Check if Youtube has blocked the server.
 	// and notify the user so they can hopefully let the host know to fix it.
-	botblocked := false
 	if containsBotCheck(stdout) || containsBotCheck(stderr) {
 		//fmt.Println("Error: Bot confirmation required. Please sign in to continue.")
 		logger.Error("Error: Bot confirmation required. Please sign in to continue. This IP may be blacklisted by Youtube")
