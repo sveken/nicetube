@@ -36,13 +36,10 @@ LABEL org.opencontainers.image.description="Official Docker image for Nicetube b
 LABEL org.opencontainers.image.licenses=GPL-3.0-or-later
 COPY --from=stage1 /home/Nicetube /home/Nicetube 
 COPY --from=stage1 /etc/passwd /etc/passwd
+RUN chown -R container:container /home/Nicetube
 USER 1000
 WORKDIR /home/Nicetube
 ENV HOME=/home/Nicetube
-ENV maxDuration=120 \
-    max_video_age=24 \
-    addr=:8085 \
-    cookies=n
 
 STOPSIGNAL SIGINT
 HEALTHCHECK --interval=60s --timeout=10s --start-period=5s --retries=3 \
