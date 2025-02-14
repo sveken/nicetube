@@ -23,9 +23,7 @@ RUN tar -xf /home/Nicetube/ffmpeg-master-latest-linux64-gpl.tar.xz -C /home/Nice
     && rm -rf /home/Nicetube/ffmpeg-master-latest-linux64-gpl.tar.xz \
     && rm -r ./ffmpeg-master-latest-linux64-gpl
 
-RUN useradd -m -u 1000 container && \
-    mkdir -p /home/Nicetube/Videos /home/Nicetube/Cookies && \
-    chown -R container:container /home/Nicetube
+RUN mkdir -p /home/Nicetube/Videos /home/Nicetube/Cookies
 
 #Stage 2
 FROM debian:bookworm-slim
@@ -34,10 +32,9 @@ LABEL org.opencontainers.image.title="Nicetube"
 LABEL org.opencontainers.image.source=https://github.com/sveken/nicetube
 LABEL org.opencontainers.image.description="Official Docker image for Nicetube bundled with required dependencies"
 LABEL org.opencontainers.image.licenses=GPL-3.0-or-later
-RUN mkdir -p /home/Nicetube \ chown -R 1000 /home/Nicetube
+RUN mkdir -p /home/Nicetube && \ useradd -m -d /home/Nicetube -s /bin/bash/ container && \ chown -R container:container /home/Nicetube
 COPY --from=stage1 /home/Nicetube /home/Nicetube 
-COPY --from=stage1 /etc/passwd /etc/passwd
-USER 1000
+USER container
 WORKDIR /home/Nicetube
 ENV HOME=/home/Nicetube
 
