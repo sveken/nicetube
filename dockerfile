@@ -33,8 +33,8 @@ LABEL org.opencontainers.image.source=https://github.com/sveken/nicetube
 LABEL org.opencontainers.image.description="Official Docker image for Nicetube bundled with required dependencies"
 LABEL org.opencontainers.image.licenses=GPL-3.0-or-later
 RUN mkdir -p /home/Nicetube \
-&& useradd -m -d /home/Nicetube -s /bin/bash container \
-&& chown -R container:container /home/Nicetube
+    && useradd -m -d /home/Nicetube -s /bin/bash container \
+    && chown -R container:container /home/Nicetube
 COPY --from=stage1 /home/Nicetube /home/Nicetube 
 USER container
 WORKDIR /home/Nicetube
