@@ -45,6 +45,10 @@ func main() {
 	if *checkhealth {
 		healthcheck(*addr)
 	}
+
+	// Get and display yt-dlp version
+	GetYTDLPVersion()
+
 	fmt.Printf("Max Duration of videos is set too %v minutes", maxDuration)
 	fmt.Println()
 	fmt.Printf("Max Video age has been set to %v hours", maxvideoage)

@@ -152,3 +152,19 @@ func enablecookies() string {
 	}
 	return ""
 }
+
+// GetYTDLPVersion executes yt-dlp --version and prints the version to stdout
+func GetYTDLPVersion() {
+	cmd := exec.Command("./yt-dlp", "--version")
+	output, err := cmd.Output()
+
+	if err != nil {
+		fmt.Println("Error getting yt-dlp version:", err)
+		return
+	}
+
+	// Trim any whitespace or newlines from the output
+	version := strings.TrimSpace(string(output))
+
+	fmt.Printf("Running version %s of yt-dlp\n", version)
+}
