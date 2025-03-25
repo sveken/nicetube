@@ -29,7 +29,7 @@ var downloadCounter int
 var botblocked bool
 
 func main() {
-	fmt.Println("You are running version 0.9.0")
+	fmt.Println("You are running version 0.9.1")
 	// Reading any command line flags and adjust the config
 	//When we go to docker the start up bach script should do this passing the envoirmetnal variables to the flag
 	//Not used yet
