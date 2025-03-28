@@ -168,3 +168,40 @@ func GetYTDLPVersion() {
 
 	fmt.Printf("Running version %s of yt-dlp\n", version)
 }
+
+func UpdateYTDLP() {
+	cmd := exec.Command("./yt-dlp", "-U")
+	output, err := cmd.CombinedOutput()
+
+	if err != nil {
+		fmt.Println("Error updating yt-dlp:", err)
+		return
+	}
+
+	// Trim any whitespace or newlines from the output
+	updateOutput := strings.TrimSpace(string(output))
+
+	// Parse the output to provide prettier messages
+	if strings.Contains(updateOutput, "yt-dlp is up to date") {
+		fmt.Println("yt-dlp is up to date")
+		return
+	}
+
+	// Extract version information when we are updating so it looks neater in the log thingy.
+	var newVersion string
+	lines := strings.Split(updateOutput, "\n")
+	for _, line := range lines {
+		if strings.Contains(line, "Updating to") {
+			parts := strings.Split(line, "Updating to ")
+			if len(parts) > 1 {
+				newVersion = strings.Split(parts[1], " ")[0]
+				fmt.Printf("Updating to %s\n", newVersion)
+			}
+		} else if strings.Contains(line, "Updated yt-dlp to") {
+			parts := strings.Split(line, "Updated yt-dlp to ")
+			if len(parts) > 1 {
+				fmt.Printf("Updated yt-dlp to %s\n", strings.Split(parts[1], " ")[0])
+			}
+		}
+	}
+}

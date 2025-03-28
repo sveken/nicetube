@@ -27,9 +27,10 @@ var maxvideoage int = 24
 var cookieLocation string
 var downloadCounter int
 var botblocked bool
+var disableYTDLPUpdate bool
 
 func main() {
-	fmt.Println("You are running version 0.9.1")
+	fmt.Println("You are running version 1.0 Beta of NiceTube")
 	// Reading any command line flags and adjust the config
 	//When we go to docker the start up bach script should do this passing the envoirmetnal variables to the flag
 	//Not used yet
@@ -37,15 +38,22 @@ func main() {
 	flag.StringVar(&cookieLocation, "cookie", "", "Location of the cookie file")
 	flag.IntVar(&maxDuration, "maxDuration", 120, "Max Video Duration in minutes")
 	flag.IntVar(&maxvideoage, "max-video-age", 24, "The max age of a video before it is deleted by the cleaner in hours. Set to 0 to disable cleaner")
+	enableWebPanel := flag.Bool("web-panel", false, "Enable the web panel interface")
 	checkhealth := flag.Bool("checkhealth", false, "Performs a health check, this is used in docker image.")
+	flag.BoolVar(&disableYTDLPUpdate, "disable-ytdlp-update", false, "Disable automatic yt-dlp updater")
 	flag.Parse()
 
 	//Perform the health check if this is just a health check.
-
 	if *checkhealth {
 		healthcheck(*addr)
 	}
-
+	// Update yt-dlp to the latest version if it is not already and if updates are not disabled
+	if !disableYTDLPUpdate {
+		fmt.Println("Checking for updates to yt-dlp. Please wait...")
+		UpdateYTDLP()
+	} else {
+		fmt.Println("yt-dlp auto-update is disabled")
+	}
 	// Get and display yt-dlp version
 	GetYTDLPVersion()
 
@@ -54,6 +62,12 @@ func main() {
 	fmt.Printf("Max Video age has been set to %v hours", maxvideoage)
 	//fmt.Printf("Max video age flag is %v", maxvideoage)
 	fmt.Println()
+
+	// Enable web panel if flag is set
+	if *enableWebPanel {
+		SetWebPanelEnabled(true)
+		fmt.Println("Web panel interface is enabled at /web")
+	}
 
 	//fmt.Printf("Running with options %s", *addr)
 	mux := http.NewServeMux()
@@ -65,6 +79,11 @@ func main() {
 	mux.Handle("GET /Videos/", http.StripPrefix("/Videos", disablelisting(fileserver)))
 	mux.HandleFunc("/reso/", GetResoVideos)
 	mux.HandleFunc("GET /health", healthservice)
+
+	// Setup web panel handlers if enabled
+	if IsWebPanelEnabled() {
+		SetupWebHandlers(mux)
+	}
 
 	// Logging stuffs
 	logger = slog.New(slog.NewTextHandler(os.Stdout, nil))
@@ -82,7 +101,12 @@ func main() {
 }
 
 func homepage(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Place Holder Homepage")
+	// If web panel is enabled, redirect to it
+	if IsWebPanelEnabled() {
+		http.Redirect(w, r, "/web", http.StatusSeeOther)
+		return
+	}
+	fmt.Fprint(w, "The Web Panel is currently disabled.")
 }
 
 // Disables directory listing
