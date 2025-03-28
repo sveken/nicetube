@@ -45,4 +45,4 @@ ENV HOME=/home/Nicetube
 STOPSIGNAL SIGINT
 HEALTHCHECK --interval=60s --timeout=10s --start-period=5s --retries=3 \
   CMD ["./nicetube-linux-amd64", "-checkhealth"]
-CMD ["sh", "-c", "./nicetube-linux-amd64 -maxDuration ${maxDuration:-120} -max-video-age ${max_video_age:-24} -addr ${addr:-:8085} -cookie ${cookies:-n} -web-panel ${web-panel:-false} -disable-ytdlp-update ${disable-ytdlp-update:-false}"]
+CMD ["sh", "-c", "./nicetube-linux-amd64 -maxDuration ${maxDuration:-120} -max-video-age ${max_video_age:-24} -addr ${addr:-:8085} -cookie ${cookies:-n} -web-panel=${web-panel:-false} -disable-ytdlp-update=${disable-ytdlp-update:-false}"]
