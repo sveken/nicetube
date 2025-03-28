@@ -169,6 +169,7 @@ func GetYTDLPVersion() {
 	fmt.Printf("Running version %s of yt-dlp\n", version)
 }
 
+// UpdateYTDLP updates yt-dlp to the latest version
 func UpdateYTDLP() {
 	cmd := exec.Command("./yt-dlp", "-U")
 	output, err := cmd.CombinedOutput()
@@ -203,5 +204,17 @@ func UpdateYTDLP() {
 				fmt.Printf("Updated yt-dlp to %s\n", strings.Split(parts[1], " ")[0])
 			}
 		}
+	}
+}
+
+// ytdlpUpdater checks for updates to yt-dlp every 24 hours
+func ytdlpUpdater() {
+	// Initial update is already done in main, so just set up the timer.
+	ticker := time.NewTicker(24 * time.Hour)
+	defer ticker.Stop()
+	for {
+		<-ticker.C
+		fmt.Println("Running scheduled update check for yt-dlp...")
+		UpdateYTDLP()
 	}
 }

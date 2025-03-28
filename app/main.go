@@ -51,6 +51,8 @@ func main() {
 	if !disableYTDLPUpdate {
 		fmt.Println("Checking for updates to yt-dlp. Please wait...")
 		UpdateYTDLP()
+		// Start background updater that runs every 24 hours to keep yt-dlp up to date
+		go ytdlpUpdater()
 	} else {
 		fmt.Println("yt-dlp auto-update is disabled")
 	}
