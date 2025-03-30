@@ -47,7 +47,7 @@ func main() {
 	if *checkhealth {
 		healthcheck(*addr)
 	}
-	// Update yt-dlp to the latest version if it is not already and if updates are not disabled
+	// Update yt-dlp to the latest version if it is not already and if auto updates are not disabled
 	if !disableYTDLPUpdate {
 		fmt.Println("Checking for updates to yt-dlp. Please wait...")
 		UpdateYTDLP()
