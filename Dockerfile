@@ -6,7 +6,7 @@ WORKDIR /app
 COPY . .
 
 # Build the application
-RUN go build -o nicetube-linux-amd64 ./app
+RUN go build -o /home/Nicetube/nicetube-linux-amd64 ./app
 
 WORKDIR /home/Nicetube
 
@@ -19,7 +19,7 @@ ADD https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux ./yt-
 ADD https://github.com/yt-dlp/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz ./ffmpeg-master-latest-linux64-gpl.tar.xz
 
 # Copy the newly built binary from the app directory
-COPY /app/nicetube-linux-amd64 .
+#COPY /app/nicetube-linux-amd64 .
 
 RUN tar -xf /home/Nicetube/ffmpeg-master-latest-linux64-gpl.tar.xz -C /home/Nicetube \
     && mv $(find /home/Nicetube -type f -name ffprobe) /home/Nicetube \
