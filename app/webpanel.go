@@ -18,7 +18,6 @@ var templateFS embed.FS
 //go:embed static
 var staticFS embed.FS
 
-// WebPanelEnabled controls whether the web panel is available, and is false by default :3
 var WebPanelEnabled = false
 
 var (
@@ -46,6 +45,7 @@ func InitWebPanel() {
 	})
 }
 
+// This looks so redunent but apperently is good design principles or something.
 // SetWebPanelEnabled sets whether the web panel is enabled
 func SetWebPanelEnabled(enabled bool) {
 	WebPanelEnabled = enabled
@@ -54,17 +54,14 @@ func SetWebPanelEnabled(enabled bool) {
 	}
 }
 
-// IsWebPanelEnabled returns whether the web panel is enabled
 func IsWebPanelEnabled() bool {
 	return WebPanelEnabled
 }
 
-// EnableWebPanel enables the web panel interface
 func EnableWebPanel() {
 	SetWebPanelEnabled(true)
 }
 
-// DisableWebPanel disables the web panel interface
 func DisableWebPanel() {
 	SetWebPanelEnabled(false)
 }
