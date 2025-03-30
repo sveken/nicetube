@@ -8,9 +8,12 @@
 </div>
 
 <div class="video-info">
-    <h3>Download Link</h3>
+    <h3>{{.Title}}</h3>
     <div class="download-link">{{.URL}}</div>
-    <button class="btn copy-btn" onclick="copyToClipboard('{{.URL}}')">Copy Link</button>
-    <a href="{{.URL}}" target="_blank" class="btn">Open Video</a>
+    <div class="video-actions">
+        <button class="btn btn-sm copy-btn" onclick="copyToClipboard('{{.URL}}')">Copy Link</button>
+        <a href="{{.URL}}" target="_blank" class="btn btn-sm">Open Video</a>
+    </div>
+    <div class="timestamp" data-time="{{.Timestamp}}">{{.TimestampFormatted}}</div>
 </div>
 {{end}}

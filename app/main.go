@@ -28,6 +28,7 @@ var cookieLocation string
 var downloadCounter int
 var botblocked bool
 var disableYTDLPUpdate bool
+var currentYTDLPVersion string
 
 func main() {
 	fmt.Println("You are running version 1.0 Beta of NiceTube")

@@ -153,20 +153,33 @@ func enablecookies() string {
 	return ""
 }
 
-// GetYTDLPVersion executes yt-dlp --version and prints the version to stdout
-func GetYTDLPVersion() {
+// GetYTDLPVersion executes yt-dlp --version and returns the version string
+func GetYTDLPVersion() string {
+	// If we already have the version stored, return it
+	if currentYTDLPVersion != "" {
+		return currentYTDLPVersion
+	}
+
+	// Otherwise fetch it and store it
 	cmd := exec.Command("./yt-dlp", "--version")
 	output, err := cmd.Output()
 
 	if err != nil {
 		fmt.Println("Error getting yt-dlp version:", err)
-		return
+		currentYTDLPVersion = "Unknown"
+		return currentYTDLPVersion
 	}
 
 	// Trim any whitespace or newlines from the output
 	version := strings.TrimSpace(string(output))
 
+	// Store in global variable
+	currentYTDLPVersion = version
+
+	// Print for the console log
 	fmt.Printf("Running version %s of yt-dlp\n", version)
+
+	return currentYTDLPVersion
 }
 
 // UpdateYTDLP updates yt-dlp to the latest version
@@ -201,9 +214,20 @@ func UpdateYTDLP() {
 		} else if strings.Contains(line, "Updated yt-dlp to") {
 			parts := strings.Split(line, "Updated yt-dlp to ")
 			if len(parts) > 1 {
-				fmt.Printf("Updated yt-dlp to %s\n", strings.Split(parts[1], " ")[0])
+				newVersion = strings.Split(parts[1], " ")[0]
+				fmt.Printf("Updated yt-dlp to %s\n", newVersion)
+
+				// Update our cached version
+				currentYTDLPVersion = newVersion
 			}
 		}
+	}
+
+	// If we couldn't parse the version from the output, refresh it directly
+	if newVersion == "" {
+		// Reset the cached version so it will be fetched again
+		currentYTDLPVersion = ""
+		GetYTDLPVersion()
 	}
 }
 

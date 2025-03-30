@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strings"
 	"sync"
+	"time"
 )
 
 // Imbed the templates and static files into the binary so its all one happy family or file.
@@ -17,13 +18,20 @@ var templateFS embed.FS
 //go:embed static
 var staticFS embed.FS
 
-// WebPanelEnabled controls whether the web panel is available
+// WebPanelEnabled controls whether the web panel is available, and is false by default :3
 var WebPanelEnabled = false
 
 var (
 	templates     *template.Template
 	templatesOnce sync.Once
 )
+
+// ConfigData holds configuration information to display in the web panel
+type ConfigData struct {
+	MaxDuration  int    // Maximum video duration in minutes
+	MaxVideoAge  int    // Maximum video age in hours
+	YTDLPVersion string // Current yt-dlp version
+}
 
 // InitWebPanel initializes templates for the web panel
 func InitWebPanel() {
@@ -88,8 +96,18 @@ func serveWebPanel(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Get the current yt-dlp version using the helper function
+	ytdlpVersion := GetYTDLPVersion()
+
+	// Create config data to pass to the template
+	configData := ConfigData{
+		MaxDuration:  maxDuration,
+		MaxVideoAge:  maxvideoage,
+		YTDLPVersion: ytdlpVersion,
+	}
+
 	InitWebPanel()
-	err := templates.ExecuteTemplate(w, "webpanel.html", nil)
+	err := templates.ExecuteTemplate(w, "webpanel.html", configData)
 	if err != nil {
 		logger.Error("Error executing template", "error", err)
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
@@ -98,8 +116,11 @@ func serveWebPanel(w http.ResponseWriter, r *http.Request) {
 
 // Response represents the JSON response for the web panel
 type Response struct {
-	URL   string `json:"url,omitempty"`
-	Error string `json:"error,omitempty"`
+	URL                string `json:"url,omitempty"`
+	Error              string `json:"error,omitempty"`
+	Title              string `json:"title,omitempty"`
+	Timestamp          int64  `json:"timestamp,omitempty"`
+	TimestampFormatted string `json:"timestampFormatted,omitempty"`
 }
 
 // handleWebDownload processes YouTube download requests from the web interface
@@ -128,7 +149,7 @@ func handleWebDownload(w http.ResponseWriter, r *http.Request) {
 
 	// Process the URL to prevent compatability issues with the existing resonite backend api.
 	// For URLs that begin with http:// or https://, remove the protocol completely
-	// This avoids issues with the urlhelper function's protocol handling
+	// This avoids issues with the urlhelper function's protocol handling doing weird crap.
 	if strings.HasPrefix(videoURL, "http://") {
 		videoURL = strings.TrimPrefix(videoURL, "http://")
 	} else if strings.HasPrefix(videoURL, "https://") {
@@ -151,7 +172,47 @@ func handleWebDownload(w http.ResponseWriter, r *http.Request) {
 	if len(result) > 6 && result[:6] == "error:" {
 		renderResult(w, Response{Error: result[7:]})
 	} else {
-		renderResult(w, Response{URL: result})
+		// Extract video ID from the URL to get a title
+		videoID := ""
+		if strings.Contains(videoURL, "youtube.com/watch?v=") {
+			parts := strings.Split(videoURL, "v=")
+			if len(parts) > 1 {
+				videoID = strings.Split(parts[1], "&")[0]
+			}
+		} else if strings.Contains(videoURL, "youtu.be/") {
+			parts := strings.Split(videoURL, "youtu.be/")
+			if len(parts) > 1 {
+				videoID = strings.Split(parts[1], "?")[0]
+			}
+		}
+
+		// Create title from video ID if we have one
+		title := "YouTube Video"
+		if videoID != "" {
+			// Try to get a better title from the path
+			pathParts := strings.Split(result, "/")
+			if len(pathParts) > 3 {
+				// The filename might contain the title
+				fileName := pathParts[len(pathParts)-1]
+				if fileName != "" {
+					// Remove extension and replace underscores with spaces
+					fileNameWithoutExt := strings.Split(fileName, ".")[0]
+					title = strings.ReplaceAll(fileNameWithoutExt, "_", " ")
+				}
+			}
+		}
+
+		// Get current timestamp
+		now := time.Now()
+		timestamp := now.Unix()
+		timestampFormatted := now.Format("Jan 2, 2006 at 3:04 PM")
+
+		renderResult(w, Response{
+			URL:                result,
+			Title:              title,
+			Timestamp:          timestamp,
+			TimestampFormatted: timestampFormatted,
+		})
 	}
 }
 

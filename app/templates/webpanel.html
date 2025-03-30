@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="dark" data-max-video-age="{{.MaxVideoAge}}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,7 +22,15 @@
         </div>
         
         <div class="card">
-            <form hx-post="/web/download" hx-target="#result" hx-indicator="#spinner">
+            <form hx-post="/web/download" hx-target="#temp-result" hx-indicator="#spinner">
+                <div class="config-info">
+                    <p>
+                        <span title="The Max duration a video can be to be accepted for download">Max Duration: <strong>{{.MaxDuration}} minutes</strong></span> • 
+                        <span title="How long the video will be cached on the server for download before needing to be redownloaded">Max Cache Age: <strong>{{.MaxVideoAge}} hours</strong></span> • 
+                        yt-dlp version: <strong>{{.YTDLPVersion}}</strong>
+                    </p>
+                </div>
+                
                 <div class="form-group">
                     <label for="videoUrl">YouTube Video URL</label>
                     <input type="text" id="videoUrl" name="videoUrl" class="form-control" placeholder="https://www.youtube.com/watch?v=..." required>
@@ -49,20 +57,215 @@
             </form>
         </div>
         
-        <div id="result" class="result-section"></div>
+        <div class="history-container">
+            <div class="history-header">
+                <h2>History</h2>
+                <button id="clearHistoryBtn" class="btn btn-danger" onclick="clearHistory()">Clear History</button>
+            </div>
+            <div id="result" class="result-section hidden"></div>
+            <div id="temp-result" class="hidden"></div>
+            <div id="history" class="history-section"></div>
+        </div>
     </div>
 
     <script>
+        // Store the MaxVideoAge from the server in hours (read from data attribute to avoid editor warnings)
+        const maxVideoAge = parseInt(document.documentElement.getAttribute('data-max-video-age') || '24');
+        
+        // Function to clear all history
+        function clearHistory() {
+            if (confirm('Are you sure you want to clear all download history?')) {
+                localStorage.removeItem('downloadHistory');
+                displayHistory();
+                console.log("History cleared");
+            }
+        }
+        
+        // Function to copy text to clipboard
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                alert('Link copied to clipboard!');
+            }, function(err) {
+                console.error('Could not copy text: ', err);
+            });
+        }
+
+        // Helper to convert timestamp strings to Date objects
+        function getTimestampFromElement(element) {
+            const timestampEl = element.querySelector('.timestamp');
+            return timestampEl ? parseInt(timestampEl.getAttribute('data-time')) : 0;
+        }
+
+        // Function to add download result to history
+        function addToHistory(html) {
+            // Create a temporary div to parse the HTML
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+            
+            // Check if this is a success message
+            const successAlert = tempDiv.querySelector('.alert-success');
+            if (!successAlert) return;  // Don't add errors to history
+            
+            // Get download info
+            const videoInfo = tempDiv.querySelector('.video-info');
+            if (!videoInfo) return;
+            
+            // Extract data from the HTML
+            const url = videoInfo.querySelector('.download-link')?.textContent?.trim() || '';
+            const title = videoInfo.querySelector('h3')?.textContent?.trim() || 'YouTube Video';
+            const timestamp = Date.now();
+            const timestampFormatted = new Date().toLocaleString();
+            
+            // Calculate when entry will expire
+            const maxAgeMs = maxVideoAge * 60 * 60 * 1000;
+            
+            // Create a clean history entry HTML
+            const historyHTML = `
+                <div class="video-info">
+                    <h3>${title}</h3>
+                    <div class="download-link">${url}</div>
+                    <div class="video-actions">
+                        <button class="btn btn-sm copy-btn" onclick="copyToClipboard('${url}')">Copy Link</button>
+                        <a href="${url}" target="_blank" class="btn btn-sm">Open Video</a>
+                    </div>
+                    <div class="timestamp" data-time="${timestamp}">
+                        ${timestampFormatted} 
+                        <span class="countdown" data-expires="${timestamp + maxAgeMs}"></span>
+                    </div>
+                </div>
+            `;
+            
+            // Create history entry object
+            const historyEntry = {
+                url,
+                title,
+                timestamp,
+                timestampFormatted,
+                html: historyHTML
+            };
+            
+            // Get existing history or create new array
+            let history = JSON.parse(localStorage.getItem('downloadHistory') || '[]');
+            
+            // Check if this URL already exists in history to avoid duplicates
+            const isDuplicate = history.some(item => item.url === url);
+            if (!isDuplicate) {
+                // Add new entry at the beginning (newest first)
+                history.unshift(historyEntry);
+                
+                // Limit history to 50 items to avoid localStorage issues
+                if (history.length > 50) {
+                    history = history.slice(0, 50);
+                }
+                
+                // Save to localStorage
+                localStorage.setItem('downloadHistory', JSON.stringify(history));
+            }
+            
+            // Update the display
+            displayHistory();
+            
+            // Log for debugging
+            console.log("Added to history:", historyEntry);
+        }
+        
+        // Function to clean expired entries from history
+        function cleanExpiredHistory() {
+            // Convert maxVideoAge from hours to milliseconds
+            const maxAgeMs = maxVideoAge * 60 * 60 * 1000;
+            const currentTime = Date.now();
+            
+            // Get history from localStorage
+            let history = JSON.parse(localStorage.getItem('downloadHistory') || '[]');
+            
+            if (history.length === 0) return;
+            
+            // Filter out expired entries
+            const filteredHistory = history.filter(entry => {
+                const entryAge = currentTime - entry.timestamp;
+                return entryAge < maxAgeMs;
+            });
+            
+            // If items were removed, update localStorage
+            if (filteredHistory.length !== history.length) {
+                console.log(`Removed ${history.length - filteredHistory.length} expired entries from history`);
+                localStorage.setItem('downloadHistory', JSON.stringify(filteredHistory));
+            }
+        }
+        
+        // Function to display download history
+        function displayHistory() {
+            const historySection = document.getElementById('history');
+            
+            // Clear existing content
+            historySection.innerHTML = '';
+            
+            // Clean expired entries first
+            cleanExpiredHistory();
+            
+            // Get history from localStorage
+            const history = JSON.parse(localStorage.getItem('downloadHistory') || '[]');
+            
+            if (history.length === 0) {
+                historySection.innerHTML = '<div class="empty-history">No download history yet</div>';
+                return;
+            }
+            
+            // Add each history item to the display
+            history.forEach((entry, index) => {
+                const entryElement = document.createElement('div');
+                entryElement.classList.add('history-entry');
+                entryElement.innerHTML = entry.html;
+                historySection.appendChild(entryElement);
+            });
+        }
+        
+        // Load and display history when the page loads
         document.addEventListener('DOMContentLoaded', function() {
+            // Previously defined code
             // Enable HTMX events to show/hide spinner
             document.body.addEventListener('htmx:beforeRequest', function() {
                 document.getElementById('spinner').classList.remove('hidden');
                 document.getElementById('downloadBtn').disabled = true;
             });
             
-            document.body.addEventListener('htmx:afterRequest', function() {
+            document.body.addEventListener('htmx:afterRequest', function(event) {
                 document.getElementById('spinner').classList.add('hidden');
                 document.getElementById('downloadBtn').disabled = false;
+                
+                // Process the download result from the temporary container
+                const tempResult = document.getElementById('temp-result');
+                if (tempResult && tempResult.innerHTML.trim() !== '') {
+                    console.log("Processing download result");
+                    
+                    // Check if this is a success message
+                    if (!tempResult.innerHTML.includes('Error') && 
+                        tempResult.innerHTML.includes('alert-success')) {
+                        
+                        // Show the success message in the result area briefly
+                        const resultElement = document.getElementById('result');
+                        resultElement.innerHTML = tempResult.innerHTML;
+                        resultElement.classList.remove('hidden');
+                        
+                        // Add to history
+                        addToHistory(tempResult.innerHTML);
+                        
+                        // Clear temp container immediately
+                        tempResult.innerHTML = '';
+                        
+                        // Hide the result message after a delay
+                        setTimeout(() => {
+                            resultElement.classList.add('hidden');
+                            resultElement.innerHTML = '';
+                        }, 3000);
+                    } else {
+                        // For errors, show them in the result area and don't add to history
+                        const resultElement = document.getElementById('result');
+                        resultElement.innerHTML = tempResult.innerHTML;
+                        resultElement.classList.remove('hidden');
+                        tempResult.innerHTML = '';
+                    }
+                }
             });
 
             // Theme toggle functionality
@@ -96,14 +299,61 @@
                     localStorage.setItem('theme', 'light');
                 }
             });
+            
+            // Clean expired entries and display history on page load
+            cleanExpiredHistory();
+            displayHistory();
+            
+            // Update countdown timers immediately and then every second
+            updateCountdownTimers();
+            setInterval(updateCountdownTimers, 1000);
+            
+            // Set up periodic cleaning of expired history entries (every 5 minutes)
+            setInterval(cleanExpiredHistory, 5 * 60 * 1000);
         });
-
-        // Function to copy text to clipboard
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(function() {
-                alert('Link copied to clipboard!');
-            }, function(err) {
-                console.error('Could not copy text: ', err);
+        
+        // Function to update all countdown timers on the page
+        function updateCountdownTimers() {
+            const countdowns = document.querySelectorAll('.countdown');
+            const now = Date.now();
+            
+            countdowns.forEach(countdown => {
+                const expiresTime = parseInt(countdown.getAttribute('data-expires'));
+                const timeRemaining = expiresTime - now;
+                
+                if (timeRemaining <= 0) {
+                    // The entry has expired, it will be removed on next cleanExpiredHistory
+                    countdown.textContent = '(expired)';
+                    countdown.className = 'countdown danger';
+                    return;
+                }
+                
+                // Calculate hours, minutes, seconds
+                const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
+                const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+                
+                // Format the countdown text
+                let countdownText = '';
+                if (hours > 0) {
+                    countdownText = `(expires in ${hours}h ${minutes}m)`;
+                } else if (minutes > 0) {
+                    countdownText = `(expires in ${minutes}m ${seconds}s)`;
+                } else {
+                    countdownText = `(expires in ${seconds}s)`;
+                }
+                
+                // Update the countdown text
+                countdown.textContent = countdownText;
+                
+                // Color coding based on time remaining
+                if (timeRemaining < 1000 * 60 * 30) { // Less than 30 minutes
+                    countdown.className = 'countdown danger';
+                } else if (timeRemaining < 1000 * 60 * 60) { // Less than 1 hour
+                    countdown.className = 'countdown warning';
+                } else {
+                    countdown.className = 'countdown';
+                }
             });
         }
     </script>
