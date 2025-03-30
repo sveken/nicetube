@@ -18,8 +18,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 ADD https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux ./yt-dlp
 ADD https://github.com/yt-dlp/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz ./ffmpeg-master-latest-linux64-gpl.tar.xz
 
-# Copy the newly built binary instead of downloading it
-COPY --from=0 /app/nicetube-linux-amd64 ./nicetube-linux-amd64
+# Copy the newly built binary from the app directory
+COPY --from=0 /app/nicetube-linux-amd64 .
 
 RUN tar -xf /home/Nicetube/ffmpeg-master-latest-linux64-gpl.tar.xz -C /home/Nicetube \
     && mv $(find /home/Nicetube -type f -name ffprobe) /home/Nicetube \
