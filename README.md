@@ -80,6 +80,7 @@ To extract a cookies file to get around age restriction or bot check you will ne
 Then place the cookies.txt file inside the folder you are mapping with docker or next to nicetube if running stand alone. Standalone flag is ``-cookie thefilehere.txt``
 ## Known issues / TODO
 
-- I want the docker image to be smaller.
-- Logging read out is not final.
-- webUI for other uses
+- ~~I want the docker image to be smaller.~~ Due to depencies it has been reduced as much possible.
+- Logging read out is open to improvments.
+- Add Arm version of docker image
+- ~~webUI for other uses~~ Added with 1.0 Beta

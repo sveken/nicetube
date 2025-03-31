@@ -25,14 +25,36 @@ document.addEventListener('DOMContentLoaded', function() {
     setInterval(cleanExpiredHistory, 5 * 60 * 1000);
     
     // Set up HTMX event handlers
-    document.body.addEventListener('htmx:beforeRequest', function() {
-        document.getElementById('spinner').classList.remove('hidden');
-        document.getElementById('downloadBtn').disabled = true;
+    document.body.addEventListener('htmx:beforeRequest', function(event) {
+        // Get the target button that initiated the request
+        const targetId = event.detail.elt.id;
+        
+        if (targetId === 'downloadBtn' || !targetId) {
+            document.getElementById('spinner').classList.remove('hidden');
+            document.getElementById('downloadBtn').disabled = true;
+            if (document.getElementById('downloadAndCopyBtn')) {
+                document.getElementById('downloadAndCopyBtn').disabled = true;
+            }
+        } else if (targetId === 'downloadAndCopyBtn') {
+            document.getElementById('spinner-copy').classList.remove('hidden');
+            document.getElementById('downloadAndCopyBtn').disabled = true;
+            document.getElementById('downloadBtn').disabled = true;
+        }
     });
 
     document.body.addEventListener('htmx:afterRequest', function(event) {
+        // Get the target button that initiated the request
+        const targetId = event.detail.elt.id;
+        
+        // Re-enable buttons and hide spinners
         document.getElementById('spinner').classList.add('hidden');
+        if (document.getElementById('spinner-copy')) {
+            document.getElementById('spinner-copy').classList.add('hidden');
+        }
         document.getElementById('downloadBtn').disabled = false;
+        if (document.getElementById('downloadAndCopyBtn')) {
+            document.getElementById('downloadAndCopyBtn').disabled = false;
+        }
         
         // Clear the URL input field immediately after request completes
         const urlField = document.getElementById('videoUrl');
@@ -49,6 +71,30 @@ document.addEventListener('DOMContentLoaded', function() {
             // Check if this is a success message
             if (!tempResult.innerHTML.includes('Error') && 
                 tempResult.innerHTML.includes('alert-success')) {
+                
+                // If this was triggered by the download & copy button, copy the URL to clipboard
+                if (targetId === 'downloadAndCopyBtn') {
+                    const linkElement = tempResult.querySelector('.download-link');
+                    if (linkElement && linkElement.textContent) {
+                        navigator.clipboard.writeText(linkElement.textContent.trim())
+                            .then(() => {
+                                console.log('URL copied to clipboard');
+                                // Show a notification
+                                const resultElement = document.getElementById('result');
+                                resultElement.innerHTML = '<div class="alert alert-success"><strong>Copied!</strong> Link copied to clipboard.</div>';
+                                resultElement.classList.remove('hidden');
+                                
+                                // Hide the notification after a few seconds
+                                setTimeout(() => {
+                                    resultElement.classList.add('hidden');
+                                    resultElement.innerHTML = '';
+                                }, 10000);
+                            })
+                            .catch(err => {
+                                console.error('Failed to copy URL: ', err);
+                            });
+                    }
+                }
                 
                 // Add to history first before showing result
                 addToHistory(tempResult.innerHTML);
@@ -141,17 +187,28 @@ function addToHistory(html) {
     const timestamp = Date.now();
     const timestampFormatted = new Date().toLocaleString();
     
+    // Extract the quality setting from the URL
+    const quality = url.match(/\/Q\d+P(?:h264Forced)?\//) ? 
+        url.match(/\/Q\d+P(?:h264Forced)?\//).toString().replace(/\//g, '') : 
+        document.getElementById('quality')?.value || 'Unknown';
+    
+    // Format quality for display
+    let qualityDisplay = quality.replace('Q', '').replace('P', 'p');
+    if (quality.includes('h264Forced')) {
+        qualityDisplay = qualityDisplay.replace('h264Forced', ' (H264)');
+    }
+    
     // Calculate when entry will expire
     const maxAgeMs = maxVideoAge * 60 * 60 * 1000;
     
-    // Create a clean history entry HTML
+    // Create a clean history entry HTML with properly styled buttons
     const historyHTML = `\
         <div class="video-info">
-            <h3>${title}</h3>
+            <h3>${title} <span class="quality-badge">${qualityDisplay}</span></h3>
             <div class="download-link">${url}</div>
             <div class="video-actions">
                 <button class="btn btn-sm copy-btn" onclick="copyToClipboard('${url}')"><i class="fas fa-copy"></i> Copy Link</button>
-                <a href="${url}" target="_blank" class="btn btn-sm"><i class="fas fa-external-link-alt"></i> Open Video</a>
+                <a href="${url}" target="_blank" class="btn btn-sm open-btn"><i class="fas fa-external-link-alt"></i> Open Video</a>
             </div>
             <div class="timestamp" data-time="${timestamp}">
                 ${timestampFormatted} 
@@ -164,6 +221,7 @@ function addToHistory(html) {
     const historyEntry = {
         url,
         title,
+        quality,
         timestamp,
         timestampFormatted,
         html: historyHTML

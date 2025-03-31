@@ -318,19 +318,20 @@ body {
 .video-info h3 {
   margin-top: 0;
   margin-bottom: 0.5rem;
-}
-
-.video-actions {
   display: flex;
-  gap: 10px;
-  margin-top: 1rem;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.btn-sm {
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
+.quality-badge {
+  font-size: 0.8rem;
+  background-color: var(--primary-color);
+  color: white;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  margin-left: auto;
 }
-
 .timestamp {
   font-size: 0.8rem;
   color: #777;
@@ -407,4 +408,37 @@ body {
   border-bottom-right-radius: 3px;
   width: 40px; /* Fixed width */
   padding: 0; /* Remove padding */
+}
+
+/* Video actions button styling */
+.video-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.video-actions .btn {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 100px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.video-actions .btn.copy-btn {
+  background-color: #4CAF50; /* Green for Copy Link button */
+}
+
+.video-actions .btn.open-btn {
+  background-color: var(--primary-color); /* Red for Open Video button */
+}
+
+.video-actions .btn:hover.copy-btn {
+  background-color: #388E3C;
+}
+
+.video-actions .btn:hover.open-btn {
+  background-color: var(--primary-hover);
 }

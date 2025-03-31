@@ -17,6 +17,7 @@
         <div class="header">
             <h1>NiceTube Downloader</h1>
             <p>Download YouTube videos for easy sharing in games, or other applications.</p>
+            <p>This was originally designed to assist with posting videos into VR games that may have outdated youtube support, geo blocking, or other platform limitations. As such the Quality settings reflect this usage.</p>
             <div class="theme-switch-wrapper">
                 <div class="theme-toggle">
                     <input type="checkbox" id="checkbox" class="toggle-checkbox" checked />
@@ -72,6 +73,10 @@
                     <button type="submit" class="btn" id="downloadBtn">
                         <span class="spinner hidden" id="spinner"></span>
                         <i class="fas fa-download"></i> Download Video
+                    </button>
+                    <button type="submit" class="btn" id="downloadAndCopyBtn" hx-post="/web/download" hx-target="#temp-result" hx-indicator="#spinner-copy">
+                        <span class="spinner hidden" id="spinner-copy"></span>
+                        <i class="fas fa-download"></i> <i class="fas fa-clipboard"></i> Download & Copy to clipboard
                     </button>
                 </div>
             </form>
