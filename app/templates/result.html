@@ -1,0 +1,19 @@
+{{if .Error}}
+<div class="alert alert-danger">
+    <strong>Error:</strong> {{.Error}}
+</div>
+{{else}}
+<div class="alert alert-success">
+    <strong>Success!</strong> Video processed successfully.
+</div>
+
+<div class="video-info">
+    <h3>{{.Title}}</h3>
+    <div class="download-link">{{.URL}}</div>
+    <div class="video-actions">
+        <button class="btn btn-sm copy-btn" onclick="copyToClipboard('{{.URL}}')">Copy Link</button>
+        <a href="{{.URL}}" target="_blank" class="btn btn-sm">Open Video</a>
+    </div>
+    <div class="timestamp" data-time="{{.Timestamp}}">{{.TimestampFormatted}}</div>
+</div>
+{{end}}

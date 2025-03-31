@@ -8,6 +8,8 @@ nicetubes is designed as a simple backend for the [Resonite Youtube Proxy Mod](h
 - Self cleaning video cache purges video files older then 24 hours.
 - Force H264 option for weaker computers or large lobbies to help with cpu usage.
 - Docker Container or various platforms support
+- Web Panel for easily downloading and copying video links for other applications. Disabled by default.
+- Auto YT-DLP updater. 
 
 Future goals is to build a web interface and provide a UI for easy copy/pasting for other applications.
 
@@ -46,7 +48,7 @@ Configurable Flags can found with -help
 ## Docker. 
 Latest docker compose file can be found in the root of this repo. 
 
-Example compose file 
+Example compose file with all configuration options.
 
 ```
 services:
@@ -56,6 +58,8 @@ services:
       maxDuration: 120 #Max Video length in minutes, default is 2 hours.
       max_video_age: 24 #Max length of time in hours videos will be cached on disk before being cleaned. Set to 0 to disable
       #cookies: "Cookies/cookies.txt" ## Uncomment this to enable cookie support, Please Read cookie info on github
+      #web_panel: true ## Uncomment to enable the web interface for usage outside of resonite. Remove or leave commented to use the default of false. 
+      #disable_ytdlp_update: true ## Uncomment to force the usage of the yt-dlp version that ships with the docker image. Remove or leave commented to use the default of false.
     ports:
       - "8085:8085"
     #volumes:
@@ -76,6 +80,7 @@ To extract a cookies file to get around age restriction or bot check you will ne
 Then place the cookies.txt file inside the folder you are mapping with docker or next to nicetube if running stand alone. Standalone flag is ``-cookie thefilehere.txt``
 ## Known issues / TODO
 
-- I want the docker image to be smaller.
-- Logging read out is not final.
-- webUI for other uses
+- ~~I want the docker image to be smaller.~~ Due to depencies it has been reduced as much possible.
+- Logging read out is open to improvments.
+- Add Arm version of docker image
+- ~~webUI for other uses~~ Added with 1.0 Beta

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<!-- The Web Panel interface was created mostly by Claude with modifications by myself, as HTML/CSS scares me and i just want to be a gopher. -->
+<html lang="en" data-theme="dark" data-max-video-age="{{.MaxVideoAge}}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NiceTube - YouTube Downloader</title>
+    <link rel="stylesheet" href="/static/css/webpanel.css">
+    <script src="https://unpkg.com/htmx.org@1.9.9"></script>
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Added external JavaScript file -->
+    <script src="/static/js/webpanel.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>NiceTube Downloader</h1>
+            <p>Download YouTube videos for easy sharing in games, or other applications.</p>
+            <p>This was originally designed to assist with posting videos into VR games that may have outdated youtube support, geo blocking, or other platform limitations. As such the Quality settings reflect this usage.</p>
+            <div class="theme-switch-wrapper">
+                <div class="theme-toggle">
+                    <input type="checkbox" id="checkbox" class="toggle-checkbox" checked />
+                    <label for="checkbox" class="toggle-label">
+                        <span class="toggle-inner"></span>
+                        <span class="toggle-switch">
+                            <i class="fas fa-moon"></i>
+                        </span>
+                    </label>
+                </div>
+                <span id="theme-label">Dark Mode</span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <form hx-post="/web/download" hx-target="#temp-result" hx-indicator="#spinner">
+                <div class="config-info">
+                    <p>
+                        <span title="The Max duration a video can be to be accepted for download">Max Duration: <strong>{{.MaxDuration}} minutes</strong></span> • 
+                        <span title="How long the video will be cached on the server for download before needing to be redownloaded">Max Cache Age: <strong>{{.MaxVideoAge}} hours</strong></span> • 
+                        yt-dlp version: <strong>{{.YTDLPVersion}}</strong>
+                    </p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="videoUrl">YouTube Video URL</label>
+                    <div class="input-with-buttons">
+                        <input type="text" id="videoUrl" name="videoUrl" class="form-control" placeholder="https://www.youtube.com/watch?v=..." required>
+                        <button type="button" id="pasteUrlBtn" class="btn-icon" title="Paste from clipboard">
+                            <i class="fas fa-paste"></i>
+                        </button>
+                        <button type="button" id="clearUrlBtn" class="btn-icon" title="Clear input">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="quality">Video Quality</label>
+                    <select id="quality" name="quality" class="form-control">
+                        <option value="Q480P">480p</option>
+                        <option value="Q720P" selected>720p</option>
+                        <option value="Q1080P">1080p</option>
+                        <option value="Q1440P">1440p</option>
+                        <option value="Q2160P">2160p</option>
+                        <option value="Q480Ph264Forced">480p (H264 forced)</option>
+                        <option value="Q720Ph264Forced">720p (H264 forced)</option>
+                        <option value="Q1080Ph264Forced">1080p (H264 forced)</option>
+                    </select>
+                </div>
+                
+                <div style="text-align: center;">
+                    <button type="submit" class="btn" id="downloadBtn">
+                        <span class="spinner hidden" id="spinner"></span>
+                        <i class="fas fa-download"></i> Download Video
+                    </button>
+                    <button type="submit" class="btn" id="downloadAndCopyBtn" hx-post="/web/download" hx-target="#temp-result" hx-indicator="#spinner-copy">
+                        <span class="spinner hidden" id="spinner-copy"></span>
+                        <i class="fas fa-download"></i> <i class="fas fa-clipboard"></i> Download & Copy to clipboard
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="history-container">
+            <div class="history-header">
+                <h2>History</h2>
+                <button id="clearHistoryBtn" class="btn btn-danger" onclick="clearHistory()">
+                    <i class="fas fa-trash-alt"></i> Clear History
+                </button>
+            </div>
+            <div id="result" class="result-section hidden"></div>
+            <div id="temp-result" class="hidden"></div>
+            <div id="history" class="history-section"></div>
+        </div>
+    </div>
+</body>
+</html>
