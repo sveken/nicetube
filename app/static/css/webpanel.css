@@ -51,54 +51,78 @@ body {
   display: flex;
   align-items: center;
   margin-top: 1rem;
+  gap: 10px;
 }
 
-.theme-switch {
-  display: inline-block;
-  height: 24px;
+.theme-toggle {
   position: relative;
-  width: 50px;
+  display: inline-block;
 }
 
-.theme-switch input {
-  display: none;
+.toggle-checkbox {
+  position: absolute;
+  opacity: 0;
+  height: 0;
+  width: 0;
 }
 
-.slider {
-  background-color: #ccc;
-  bottom: 0;
+.toggle-label {
+  display: inline-block;
+  position: relative;
   cursor: pointer;
-  left: 0;
+  width: 50px;
+  height: 26px;
+}
+
+.toggle-inner {
   position: absolute;
-  right: 0;
   top: 0;
-  transition: .4s;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
   border-radius: 34px;
+  transition: background-color 0.2s ease;
 }
 
-.slider:before {
-  background-color: white;
-  bottom: 4px;
-  content: "";
-  height: 16px;
-  left: 4px;
+.toggle-switch {
   position: absolute;
-  transition: .4s;
-  width: 16px;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  background-color: white;
   border-radius: 50%;
+  transition: transform 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-input:checked + .slider {
+.toggle-switch i {
+  font-size: 12px;
+  color: #121212;
+}
+
+.toggle-checkbox:checked + .toggle-label .toggle-inner {
   background-color: var(--primary-color);
 }
 
-input:checked + .slider:before {
-  transform: translateX(26px);
+.toggle-checkbox:checked + .toggle-label .toggle-switch {
+  transform: translateX(24px);
 }
 
-.theme-switch-wrapper span {
-  margin-left: 10px;
-  font-size: 0.9rem;
+.toggle-checkbox:not(:checked) + .toggle-label .toggle-switch i.fa-moon {
+  display: none;
+}
+
+.toggle-checkbox:not(:checked) + .toggle-label .toggle-switch::before {
+  content: '\f185'; /* Unicode for fa-sun */
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  font-size: 12px;
+  color: #ffb700;
 }
 
 .card {
