@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+// The Web Panel. This was created mostly by Claude with modifications by myself, as HTML/CSS scares me and i just want to be a gopher.
 <html lang="en" data-theme="dark" data-max-video-age="{{.MaxVideoAge}}">
 <head>
     <meta charset="UTF-8">
@@ -6,6 +7,8 @@
     <title>NiceTube - YouTube Downloader</title>
     <link rel="stylesheet" href="/static/css/webpanel.css">
     <script src="https://unpkg.com/htmx.org@1.9.9"></script>
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
@@ -33,7 +36,15 @@
                 
                 <div class="form-group">
                     <label for="videoUrl">YouTube Video URL</label>
-                    <input type="text" id="videoUrl" name="videoUrl" class="form-control" placeholder="https://www.youtube.com/watch?v=..." required>
+                    <div class="input-with-buttons">
+                        <input type="text" id="videoUrl" name="videoUrl" class="form-control" placeholder="https://www.youtube.com/watch?v=..." required>
+                        <button type="button" id="pasteUrlBtn" class="btn-icon" title="Paste from clipboard">
+                            <i class="fas fa-paste"></i>
+                        </button>
+                        <button type="button" id="clearUrlBtn" class="btn-icon" title="Clear input">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="form-group">
@@ -50,17 +61,21 @@
                     </select>
                 </div>
                 
-                <button type="submit" class="btn" id="downloadBtn">
-                    <span class="spinner hidden" id="spinner"></span>
-                    Download Video
-                </button>
+                <div style="text-align: center;">
+                    <button type="submit" class="btn" id="downloadBtn">
+                        <span class="spinner hidden" id="spinner"></span>
+                        <i class="fas fa-download"></i> Download Video
+                    </button>
+                </div>
             </form>
         </div>
         
         <div class="history-container">
             <div class="history-header">
                 <h2>History</h2>
-                <button id="clearHistoryBtn" class="btn btn-danger" onclick="clearHistory()">Clear History</button>
+                <button id="clearHistoryBtn" class="btn btn-danger" onclick="clearHistory()">
+                    <i class="fas fa-trash-alt"></i> Clear History
+                </button>
             </div>
             <div id="result" class="result-section hidden"></div>
             <div id="temp-result" class="hidden"></div>
@@ -71,6 +86,25 @@
     <script>
         // Store the MaxVideoAge from the server in hours (read from data attribute to avoid editor warnings)
         const maxVideoAge = parseInt(document.documentElement.getAttribute('data-max-video-age') || '24');
+        
+        // Function to paste URL from clipboard
+        function pasteFromClipboard() {
+            navigator.clipboard.readText()
+                .then(text => {
+                    document.getElementById('videoUrl').value = text;
+                    console.log("URL pasted from clipboard");
+                })
+                .catch(err => {
+                    console.error('Failed to read clipboard: ', err);
+                    alert('Unable to paste from clipboard. Please check permissions.');
+                });
+        }
+        
+        // Function to clear URL input field
+        function clearUrlField() {
+            document.getElementById('videoUrl').value = '';
+            console.log("URL field cleared");
+        }
         
         // Function to clear all history
         function clearHistory() {
@@ -125,8 +159,8 @@
                     <h3>${title}</h3>
                     <div class="download-link">${url}</div>
                     <div class="video-actions">
-                        <button class="btn btn-sm copy-btn" onclick="copyToClipboard('${url}')">Copy Link</button>
-                        <a href="${url}" target="_blank" class="btn btn-sm">Open Video</a>
+                        <button class="btn btn-sm copy-btn" onclick="copyToClipboard('${url}')"><i class="fas fa-copy"></i> Copy Link</button>
+                        <a href="${url}" target="_blank" class="btn btn-sm"><i class="fas fa-external-link-alt"></i> Open Video</a>
                     </div>
                     <div class="timestamp" data-time="${timestamp}">
                         ${timestampFormatted} 
@@ -220,54 +254,65 @@
             });
         }
         
+        // Set up HTMX event handlers immediately (outside of DOMContentLoaded)
+        // This ensures they are registered as early as possible
+        document.body.addEventListener('htmx:beforeRequest', function() {
+            document.getElementById('spinner').classList.remove('hidden');
+            document.getElementById('downloadBtn').disabled = true;
+        });
+        
+        document.body.addEventListener('htmx:afterRequest', function(event) {
+            document.getElementById('spinner').classList.add('hidden');
+            document.getElementById('downloadBtn').disabled = false;
+            
+            // Clear the URL input field immediately after request completes
+            const urlField = document.getElementById('videoUrl');
+            if (urlField) {
+                urlField.value = '';
+                console.log("URL field cleared");
+            }
+            
+            // Process the download result from the temporary container
+            const tempResult = document.getElementById('temp-result');
+            if (tempResult && tempResult.innerHTML.trim() !== '') {
+                console.log("Processing download result");
+                
+                // Check if this is a success message
+                if (!tempResult.innerHTML.includes('Error') && 
+                    tempResult.innerHTML.includes('alert-success')) {
+                    
+                    // Show the success message in the result area briefly
+                    const resultElement = document.getElementById('result');
+                    resultElement.innerHTML = tempResult.innerHTML;
+                    resultElement.classList.remove('hidden');
+                    
+                    // Add to history
+                    addToHistory(tempResult.innerHTML);
+                    
+                    // Clear temp container immediately
+                    tempResult.innerHTML = '';
+                    
+                    // Hide the result message after a delay
+                    setTimeout(() => {
+                        resultElement.classList.add('hidden');
+                        resultElement.innerHTML = '';
+                    }, 3000);
+                } else {
+                    // For errors, show them in the result area and don't add to history
+                    const resultElement = document.getElementById('result');
+                    resultElement.innerHTML = tempResult.innerHTML;
+                    resultElement.classList.remove('hidden');
+                    tempResult.innerHTML = '';
+                }
+            }
+        });
+        
         // Load and display history when the page loads
         document.addEventListener('DOMContentLoaded', function() {
-            // Previously defined code
-            // Enable HTMX events to show/hide spinner
-            document.body.addEventListener('htmx:beforeRequest', function() {
-                document.getElementById('spinner').classList.remove('hidden');
-                document.getElementById('downloadBtn').disabled = true;
-            });
+            // Register event listeners for paste and clear buttons
+            document.getElementById('pasteUrlBtn').addEventListener('click', pasteFromClipboard);
+            document.getElementById('clearUrlBtn').addEventListener('click', clearUrlField);
             
-            document.body.addEventListener('htmx:afterRequest', function(event) {
-                document.getElementById('spinner').classList.add('hidden');
-                document.getElementById('downloadBtn').disabled = false;
-                
-                // Process the download result from the temporary container
-                const tempResult = document.getElementById('temp-result');
-                if (tempResult && tempResult.innerHTML.trim() !== '') {
-                    console.log("Processing download result");
-                    
-                    // Check if this is a success message
-                    if (!tempResult.innerHTML.includes('Error') && 
-                        tempResult.innerHTML.includes('alert-success')) {
-                        
-                        // Show the success message in the result area briefly
-                        const resultElement = document.getElementById('result');
-                        resultElement.innerHTML = tempResult.innerHTML;
-                        resultElement.classList.remove('hidden');
-                        
-                        // Add to history
-                        addToHistory(tempResult.innerHTML);
-                        
-                        // Clear temp container immediately
-                        tempResult.innerHTML = '';
-                        
-                        // Hide the result message after a delay
-                        setTimeout(() => {
-                            resultElement.classList.add('hidden');
-                            resultElement.innerHTML = '';
-                        }, 3000);
-                    } else {
-                        // For errors, show them in the result area and don't add to history
-                        const resultElement = document.getElementById('result');
-                        resultElement.innerHTML = tempResult.innerHTML;
-                        resultElement.classList.remove('hidden');
-                        tempResult.innerHTML = '';
-                    }
-                }
-            });
-
             // Theme toggle functionality
             const checkbox = document.getElementById('checkbox');
             const themeLabel = document.getElementById('theme-label');
