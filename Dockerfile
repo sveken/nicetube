@@ -25,14 +25,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 
-RUN tar -xf /home/Nicetube/ffmpeg-master-latest-linux.tar.xz -C /home/Nicetube \
-    && mv $(find /home/Nicetube -type f -name ffprobe) /home/Nicetube \
-    && mv $(find /home/Nicetube -type f -name ffmpeg) /home/Nicetube \
+RUN tar -xf /home/Nicetube/ffmpeg-master-latest-linux.tar.xz -C /home/Nicetube/extract \
+    && mv $(find /home/Nicetube/extract -type f -name ffprobe) /home/Nicetube \
+    && mv $(find /home/Nicetube/extract -type f -name ffmpeg) /home/Nicetube \
     && chmod +x /home/Nicetube/yt-dlp \
     && chmod +x /home/Nicetube/nicetube-linux-docker \
     && chmod +x /home/Nicetube/ffprobe /home/Nicetube/ffmpeg \
     && rm -rf /home/Nicetube/ffmpeg-master-latest-linux.tar.xz \
-    && rm -r ./ffmpeg-master-latest-linux
+    && rm -r ./extract
 
 RUN mkdir -p /home/Nicetube/Videos /home/Nicetube/Cookies \
     && useradd -m -d /home/Nicetube -s /bin/bash container \
