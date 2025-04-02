@@ -6,10 +6,7 @@ COPY . .
 RUN go build -o /home/Nicetube/nicetube-linux-docker ./app
 
 FROM base AS build-arm64
-
 WORKDIR /home/Nicetube
-
-
 ADD https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux_aarch64 ./yt-dlp
 ADD https://github.com/yt-dlp/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linuxarm64-gpl.tar.xz ./ffmpeg-master-latest-linux.tar.xz
 
@@ -24,8 +21,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     xz-utils \
     && rm -rf /var/lib/apt/lists/*
 
-
-RUN tar -xf /home/Nicetube/ffmpeg-master-latest-linux.tar.xz -C /home/Nicetube/extract \
+RUN mkdir -p /home/Nicetube/extract \
+    && tar -xf /home/Nicetube/ffmpeg-master-latest-linux.tar.xz -C /home/Nicetube/extract \
     && mv $(find /home/Nicetube/extract -type f -name ffprobe) /home/Nicetube \
     && mv $(find /home/Nicetube/extract -type f -name ffmpeg) /home/Nicetube \
     && chmod +x /home/Nicetube/yt-dlp \
