@@ -4,10 +4,13 @@ services:
     environment:
       maxDuration: 120 #Max Video length in minutes, default is 2 hours.
       max_video_age: 24 #Max length of time in hours videos will be cached on disk before being cleaned. Set to 0 to disable
+      #cookies: "Cookies/cookies.txt" ## Uncomment this to enable cookie support, Please Read cookie info on github
+      #web_panel: true ## Uncomment to enable the web interface for usage outside of resonite. Remove or leave commented to use the default of false. 
+      #disable_ytdlp_update: true ## Uncomment to force the usage of the yt-dlp version that ships with the docker image. Remove or leave commented to use the default of false.
     ports:
       - "8085:8085"
     #volumes:
     #Uncomment if you want to store the video files elsewhere. Otherwise it will store them inside the container, which gets wiped every recreation/update.
      # - /Mydatapth:/home/Nicetube/Videos 
-     # - /PathToCookieFolder:/home/Nicetube/Cookies
+     # - /PathToCookieFolder:/home/Nicetube/Cookies ##Uncomment to specify a folder containing your cookie text file
     restart: always
