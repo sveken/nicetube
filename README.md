@@ -7,9 +7,9 @@ nicetubes is designed as a simple backend for the [Resonite Youtube Proxy Mod](h
 - Quality selection from 360,480,720,1080,1440,2160P+ preferencing 60 fps when available.
 - Self cleaning video cache purges video files older then 24 hours.
 - Force H264 option for weaker computers or large lobbies to help with cpu usage.
-- Docker Container or various platforms support
+-  AMD64/ARM64 Docker Container or various platforms support
 - Web Panel for easily downloading and copying video links for other applications. Disabled by default.
-- Auto YT-DLP updater. 
+- Auto YT-DLP updater. Checks on start, and every 24H
 
 Future goals is to build a web interface and provide a UI for easy copy/pasting for other applications.
 
@@ -46,7 +46,7 @@ nicetube also depends on ffmpeg and [yt-dlp](https://github.com/yt-dlp/yt-dlp#in
 Configurable Flags can found with -help
 
 ## Docker. 
-Latest docker compose file can be found in the root of this repo. 
+Latest docker compose file can be found in the root of this repo. The Nicetube Docker image supports both AMD64 and ARM64 hosts.
 
 Example compose file with all configuration options.
 
@@ -80,7 +80,8 @@ To extract a cookies file to get around age restriction or bot check you will ne
 Then place the cookies.txt file inside the folder you are mapping with docker or next to nicetube if running stand alone. Standalone flag is ``-cookie thefilehere.txt``
 ## Known issues / TODO
 
-- ~~I want the docker image to be smaller.~~ Due to depencies it has been reduced as much possible.
+- ~~I want the docker image to be smaller.~~ - Due to depencies it has been reduced as much possible.
 - Logging read out is open to improvments.
-- Add Arm version of docker image
-- ~~webUI for other uses~~ Added with 1.0 Beta
+- ~~Add Arm version of docker image~~ - Added. 
+- ~~webUI for other uses~~ - Added with 1.0 Beta
+- Add Music to OGG support so users can import media that plays as a audio file directly into world. Depending on Mod Support
