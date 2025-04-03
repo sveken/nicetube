@@ -28,6 +28,7 @@ var (
 	Q480P            = "244+ba/243+ba/242+ba/278+ba"
 	Q1440P           = "308+ba/271+ba/700+ba/400+ba/303+ba/248+ba/699+ba/399+ba/302+ba/247+ba/244+ba/243+ba/242+ba/278+ba"
 	Q2160P           = "315+ba/313+ba/701+ba/401+ba/308+ba/271+ba/700+ba/400+ba/303+ba/248+ba/699+ba/399+ba/302+ba/247+ba/244+ba/243+ba/242+ba/278+ba"
+	oggvorbis        = "bestaudio/bestaudio*"
 )
 
 func SetQuality(QualitySelector string) string {
@@ -50,6 +51,8 @@ func SetQuality(QualitySelector string) string {
 		return Q2160P
 	case "QPoggers":
 		return QPoggers
+	case "oggvorbis":
+		return oggvorbis
 	default:
 		return Q720P
 	}

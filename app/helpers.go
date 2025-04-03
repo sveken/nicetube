@@ -114,10 +114,10 @@ func GetFileName(savedir string) (string, error) {
 		return "", fmt.Errorf("failed to read directory: %v", err)
 	}
 
-	// Find the .mp4 file in the directory and extract its name
+	// Edit this for file container support
 	var Videofile string
 	for _, file := range files {
-		if !file.IsDir() && (strings.HasSuffix(file.Name(), ".mp4") || strings.HasSuffix(file.Name(), ".webm") || strings.HasSuffix(file.Name(), ".mkv")) {
+		if !file.IsDir() && (strings.HasSuffix(file.Name(), ".mp4") || strings.HasSuffix(file.Name(), ".webm") || strings.HasSuffix(file.Name(), ".mkv") || strings.HasSuffix(file.Name(), ".ogg")) {
 			Videofile = file.Name()
 			break
 		}

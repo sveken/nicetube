@@ -65,14 +65,25 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 	if cookieset != "" {
 		args = append(args, "--cookies", cookieset)
 	}
-
-	args = append(args,
-		forceformat, QualityValue,
-		"--restrict-filenames", "--replace-in-metadata", "title", "%", "_",
-		"--ffmpeg-location", "./",
-		"-o", outputname, "--",
-		VideoURL,
-	)
+	if QualitySelector == "oggvorbis" {
+		args = append(args,
+			forceformat, QualityValue,
+			"--restrict-filenames", "--replace-in-metadata", "title", "%", "_",
+			"--ffmpeg-location", "./",
+			"-o", outputname, "--extract-audio", "--audio-format", "vorbis",
+			"--audio-quality", "5",
+			"--",
+			VideoURL,
+		)
+	} else {
+		args = append(args,
+			forceformat, QualityValue,
+			"--restrict-filenames", "--replace-in-metadata", "title", "%", "_",
+			"--ffmpeg-location", "./",
+			"-o", outputname, "--",
+			VideoURL,
+		)
+	}
 	// Reset Buffers so the botcheck clears the previous output
 	stdoutBuf.Reset()
 	stderrBuf.Reset()
