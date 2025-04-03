@@ -135,13 +135,17 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 	TheDownloadURL, err = ReturnDownloadURL(savedir, Domain)
 	//fmt.Println(TheDownloadURL)
 	//http.Redirect(w, r, TheDownloadURL, http.StatusSeeOther)
-	if err != nil && botblocked != true {
+	if err != nil && !botblocked {
 		fmt.Fprintf(w, "error: No file was downloaded. Is the URL correct?")
 		return
 	}
 	fmt.Fprint(w, TheDownloadURL)
 
-	// Add a little counter that shows how many videos have been downloaded since startup. This will only count new downloads
-	downloadCounter++
-	fmt.Printf("Total Video downloads this session: %d\n", downloadCounter)
+	// Add counters based on the action.
+	if QualitySelector == "oggvorbis" {
+		audioCounter++
+	} else {
+		downloadCounter++
+	}
+	fmt.Printf("Total Video Downloads or Audio conversions this session. Videos: %d, Audio: %d\n", downloadCounter, audioCounter)
 }

@@ -26,6 +26,7 @@ var maxDuration int = 120
 var maxvideoage int = 24
 var cookieLocation string
 var downloadCounter int
+var audioCounter int
 var botblocked bool
 var disableYTDLPUpdate bool
 var currentYTDLPVersion string
