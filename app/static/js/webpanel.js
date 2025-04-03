@@ -188,14 +188,27 @@ function addToHistory(html) {
     const timestampFormatted = new Date().toLocaleString();
     
     // Extract the quality setting from the URL
-    const quality = url.match(/\/Q\d+P(?:h264Forced)?\//) ? 
-        url.match(/\/Q\d+P(?:h264Forced)?\//).toString().replace(/\//g, '') : 
-        document.getElementById('quality')?.value || 'Unknown';
+    let quality = 'Unknown';
+    if (url.includes('/oggvorbis/')) {
+        quality = 'oggvorbis';
+    } else {
+        const qualityMatch = url.match(/\/Q\d+P(?:h264Forced)?\//)
+        if (qualityMatch) {
+            quality = qualityMatch.toString().replace(/\//g, '');
+        } else {
+            quality = document.getElementById('quality')?.value || 'Unknown';
+        }
+    }
     
     // Format quality for display
-    let qualityDisplay = quality.replace('Q', '').replace('P', 'p');
-    if (quality.includes('h264Forced')) {
-        qualityDisplay = qualityDisplay.replace('h264Forced', ' (H264)');
+    let qualityDisplay = quality;
+    if (quality.startsWith('Q')) {
+        qualityDisplay = quality.replace('Q', '').replace('P', 'p');
+        if (quality.includes('h264Forced')) {
+            qualityDisplay = qualityDisplay.replace('h264Forced', ' (H264)');
+        }
+    } else if (quality === 'oggvorbis') {
+        qualityDisplay = 'Audio (Ogg Vorbis)';
     }
     
     // Calculate when entry will expire

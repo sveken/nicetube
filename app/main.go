@@ -26,12 +26,13 @@ var maxDuration int = 120
 var maxvideoage int = 24
 var cookieLocation string
 var downloadCounter int
+var audioCounter int
 var botblocked bool
 var disableYTDLPUpdate bool
 var currentYTDLPVersion string
 
 func main() {
-	fmt.Println("You are running version 1.0 Beta of NiceTube")
+	fmt.Println("You are running version 1.1 of NiceTube")
 	// Reading any command line flags and adjust the config
 	//When we go to docker the start up bach script should do this passing the envoirmetnal variables to the flag
 	//Not used yet
