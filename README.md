@@ -40,8 +40,9 @@ nicetube also depends on ffmpeg and [yt-dlp](https://github.com/yt-dlp/yt-dlp#in
 1. Download the latest release for your platform into a folder you will use for nicetube
 2. Download the standalone build of [yt-dlp](https://github.com/yt-dlp/yt-dlp#installation) for your platform.
 3. Download the patched ffmpeg from [yt-dlps repo here](https://github.com/yt-dlp/FFmpeg-Builds) for your platform.
-4. Extract the binarys for ffpmpeg, ffprobe and yt-dlp into your nicetube folder.
-5. Run nicetube
+4. Download [Deno for your platform here](https://github.com/denoland/deno/releases)
+5. Extract the binarys for ffpmpeg, ffprobe, deno and yt-dlp into your nicetube folder.
+6. Run nicetube
 
 Configurable Flags can found with -help
 
