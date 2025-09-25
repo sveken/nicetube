@@ -32,7 +32,7 @@ var disableYTDLPUpdate bool
 var currentYTDLPVersion string
 
 func main() {
-	fmt.Println("You are running version 1.1.1 of NiceTube")
+	fmt.Println("You are running version 1.1.2 of NiceTube")
 	// Reading any command line flags and adjust the config
 	//When we go to docker the start up bach script should do this passing the envoirmetnal variables to the flag
 	//Not used yet
