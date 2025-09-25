@@ -147,5 +147,6 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 	} else {
 		downloadCounter++
 	}
-	fmt.Printf("Total Video Downloads or Audio conversions this session. Videos: %d, Audio: %d\n", downloadCounter, audioCounter)
+	timestamp := time.Now().Format("2006-01-02 15:04:05")
+	fmt.Printf("[%s] Total Video Downloads or Audio conversions this session. Videos: %d, Audio: %d\n", timestamp, downloadCounter, audioCounter)
 }
