@@ -9,26 +9,32 @@ FROM base AS build-arm64
 WORKDIR /home/Nicetube
 ADD https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux_aarch64 ./yt-dlp
 ADD https://github.com/yt-dlp/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linuxarm64-gpl.tar.xz ./ffmpeg-master-latest-linux.tar.xz
+ADD https://github.com/denoland/deno/releases/latest/download/deno-aarch64-unknown-linux-gnu.zip ./deno.zip
 
 FROM base AS build-amd64
 WORKDIR /home/Nicetube
 ADD https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux ./yt-dlp
 ADD https://github.com/yt-dlp/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz ./ffmpeg-master-latest-linux.tar.xz
+ADD https://github.com/denoland/deno/releases/latest/download/deno-x86_64-unknown-linux-gnu.zip ./deno.zip
 
 FROM build-${TARGETARCH} AS build
 WORKDIR /home/Nicetube
 RUN apt-get update && apt-get install -y --no-install-recommends \
     xz-utils \
+    unzip \
     && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /home/Nicetube/extract \
     && tar -xf /home/Nicetube/ffmpeg-master-latest-linux.tar.xz -C /home/Nicetube/extract \
     && mv $(find /home/Nicetube/extract -type f -name ffprobe) /home/Nicetube \
     && mv $(find /home/Nicetube/extract -type f -name ffmpeg) /home/Nicetube \
+    && unzip -j /home/Nicetube/deno.zip -d /home/Nicetube \
     && chmod +x /home/Nicetube/yt-dlp \
     && chmod +x /home/Nicetube/nicetube-linux-docker \
     && chmod +x /home/Nicetube/ffprobe /home/Nicetube/ffmpeg \
+    && chmod +x /home/Nicetube/deno \
     && rm -rf /home/Nicetube/ffmpeg-master-latest-linux.tar.xz \
+    && rm -rf /home/Nicetube/deno.zip \
     && rm -r ./extract
 
 RUN mkdir -p /home/Nicetube/Videos /home/Nicetube/Cookies \
