@@ -21,6 +21,7 @@ FROM build-${TARGETARCH} AS build
 WORKDIR /home/Nicetube
 RUN apt-get update && apt-get install -y --no-install-recommends \
     xz-utils \
+    unzip \
     && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /home/Nicetube/extract \
