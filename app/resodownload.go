@@ -72,7 +72,7 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 		"--restrict-filenames", "--replace-in-metadata", "title", "%", "_",
 		"--ffmpeg-location", "./"}
 
-	// Add deno runtime only on Linux
+	// Tell ytdlp where deno is only on Linux
 	if runtime.GOOS == "linux" {
 		commonArgs = append(commonArgs, "--js-runtimes", "deno:./deno")
 	}
