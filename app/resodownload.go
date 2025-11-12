@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"runtime"
 	"time"
 )
 
@@ -65,21 +66,28 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 	if cookieset != "" {
 		args = append(args, "--cookies", cookieset)
 	}
+
+	// Common arguments here
+	commonArgs := []string{forceformat, QualityValue,
+		"--restrict-filenames", "--replace-in-metadata", "title", "%", "_",
+		"--ffmpeg-location", "./"}
+
+	// Tell ytdlp where deno is only on Linux
+	if runtime.GOOS == "linux" {
+		commonArgs = append(commonArgs, "--js-runtimes", "deno:./deno")
+	}
+
 	if QualitySelector == "oggvorbis" {
+		args = append(args, commonArgs...)
 		args = append(args,
-			forceformat, QualityValue,
-			"--restrict-filenames", "--replace-in-metadata", "title", "%", "_",
-			"--ffmpeg-location", "./",
 			"-o", outputname, "--extract-audio", "--audio-format", "vorbis",
 			"--audio-quality", "5",
 			"--",
 			VideoURL,
 		)
 	} else {
+		args = append(args, commonArgs...)
 		args = append(args,
-			forceformat, QualityValue,
-			"--restrict-filenames", "--replace-in-metadata", "title", "%", "_",
-			"--ffmpeg-location", "./",
 			"-o", outputname, "--",
 			VideoURL,
 		)
