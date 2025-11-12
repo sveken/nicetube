@@ -79,7 +79,7 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 		args = append(args,
 			forceformat, QualityValue,
 			"--restrict-filenames", "--replace-in-metadata", "title", "%", "_",
-			"--ffmpeg-location", "./",
+			"--ffmpeg-location", "./", "--js-runtimes", "deno:./deno",
 			"-o", outputname, "--",
 			VideoURL,
 		)
