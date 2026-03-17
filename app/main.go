@@ -66,6 +66,12 @@ func main() {
 	fmt.Printf("Max Video age has been set to %v hours", maxvideoage)
 	//fmt.Printf("Max video age flag is %v", maxvideoage)
 	fmt.Println()
+	// Checks if the cookies thingy is set or not, as requested by TisFoolish
+	if enablecookies() != "" {
+		fmt.Printf("Cookies are enabled and set to %v\n", enablecookies())
+	} else {
+		fmt.Printf("No Cookies set\n")
+	}
 
 	// Enable web panel if flag is set
 	if *enableWebPanel {
