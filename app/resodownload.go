@@ -67,6 +67,10 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 		args = append(args, "--cookies", cookieset)
 	}
 
+	if verboselog {
+		args = append(args, "--verbose")
+	}
+
 	// Common arguments here
 	commonArgs := []string{forceformat, QualityValue,
 		"--restrict-filenames", "--replace-in-metadata", "title", "%", "_",

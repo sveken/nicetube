@@ -30,9 +30,10 @@ var audioCounter int
 var botblocked bool
 var disableYTDLPUpdate bool
 var currentYTDLPVersion string
+var verboselog bool
 
 func main() {
-	fmt.Println("You are running version 1.2 of NiceTube")
+	fmt.Println("You are running version 1.3 of NiceTube")
 	// Reading any command line flags and adjust the config
 	//When we go to docker the start up bach script should do this passing the envoirmetnal variables to the flag
 	//Not used yet
@@ -43,6 +44,7 @@ func main() {
 	enableWebPanel := flag.Bool("web-panel", false, "Enable the web panel interface")
 	checkhealth := flag.Bool("checkhealth", false, "Performs a health check, this is used in docker image.")
 	flag.BoolVar(&disableYTDLPUpdate, "disable-ytdlp-update", false, "Disable automatic yt-dlp updater")
+	flag.BoolVar(&verboselog, "verboselog", false, "Enable verbose logging for yt-dlp")
 	flag.Parse()
 
 	//Perform the health check if this is just a health check.
