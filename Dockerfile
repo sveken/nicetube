@@ -7,13 +7,13 @@ RUN go build -o /home/Nicetube/nicetube-linux-docker ./app
 
 FROM base AS build-arm64
 WORKDIR /home/Nicetube
-ADD https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux_aarch64 ./yt-dlp
+ADD https://github.com/yt-dlp/yt-dlp-nightly-builds/releases/latest/download/yt-dlp_linux_aarch64 ./yt-dlp
 ADD https://github.com/yt-dlp/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linuxarm64-gpl.tar.xz ./ffmpeg-master-latest-linux.tar.xz
 ADD https://github.com/denoland/deno/releases/latest/download/deno-aarch64-unknown-linux-gnu.zip ./deno.zip
 
 FROM base AS build-amd64
 WORKDIR /home/Nicetube
-ADD https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux ./yt-dlp
+ADD https://github.com/yt-dlp/yt-dlp-nightly-builds/releases/latest/download/yt-dlp_linux ./yt-dlp
 ADD https://github.com/yt-dlp/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz ./ffmpeg-master-latest-linux.tar.xz
 ADD https://github.com/denoland/deno/releases/latest/download/deno-x86_64-unknown-linux-gnu.zip ./deno.zip
 
