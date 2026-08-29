@@ -33,7 +33,7 @@ var currentYTDLPVersion string
 var verboselog bool
 
 func main() {
-	fmt.Println("You are running version 1.3 of NiceTube")
+	fmt.Println("You are running version 1.4 of NiceTube")
 	// Reading any command line flags and adjust the config
 	//When we go to docker the start up bach script should do this passing the envoirmetnal variables to the flag
 	//Not used yet
@@ -178,6 +178,10 @@ func urlhelper(path, QualitySelector string) (string, string, error) {
 		// Just take the entire string after the last /
 		lastSlashPosition := strings.LastIndex(pathParts[1], "/")
 		VideoID := pathParts[1][lastSlashPosition+1:]
+		// Strip share-link query params (e.g. ?si=...) so it doesn't leak into the folder name/returned URL
+		if queryIndex := strings.Index(VideoID, "?"); queryIndex != -1 {
+			VideoID = VideoID[:queryIndex]
+		}
 		logger.Info("Getting Youtube video", "URL", VideoURL, "VideoID", VideoID)
 		return VideoURL, VideoID, nil
 	}
