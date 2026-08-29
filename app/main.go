@@ -178,6 +178,10 @@ func urlhelper(path, QualitySelector string) (string, string, error) {
 		// Just take the entire string after the last /
 		lastSlashPosition := strings.LastIndex(pathParts[1], "/")
 		VideoID := pathParts[1][lastSlashPosition+1:]
+		// Strip share-link query params (e.g. ?si=...) so it doesn't leak into the folder name/returned URL
+		if queryIndex := strings.Index(VideoID, "?"); queryIndex != -1 {
+			VideoID = VideoID[:queryIndex]
+		}
 		logger.Info("Getting Youtube video", "URL", VideoURL, "VideoID", VideoID)
 		return VideoURL, VideoID, nil
 	}
