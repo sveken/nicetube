@@ -131,8 +131,8 @@ func GetResoVideos(w http.ResponseWriter, r *http.Request) {
 	// and notify the user so they can hopefully let the host know to fix it.
 	if containsBotCheck(stdout) || containsBotCheck(stderr) {
 		//fmt.Println("Error: Bot confirmation required. Please sign in to continue.")
-		logger.Error("Error: Bot confirmation required. Please sign in to continue. This IP may be blacklisted by Youtube")
-		fmt.Fprintf(w, "error: YouTube has blocked this IP or server. Please swap to another or notify the host.")
+		logger.Error("Error: Bot confirmation required. Please sign in to continue. This IP may be blacklisted by Youtube or the video requires you to be logged in.")
+		fmt.Fprintf(w, "error: YouTube may have blocked this IP or server or may be a video that requires a signed in account. Please try another video, swap to another or notify the host.")
 		botblocked = true
 		return
 
